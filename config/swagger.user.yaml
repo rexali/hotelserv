@@ -1,0 +1,64 @@
+/api/v1/admin/create:
+   post:
+     summary: Create a new admin
+     tags: [Admin]
+     requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                role:
+                  type: string
+                  enum: [Admin, Super Admin]
+                email:
+                  type: string
+              required:
+                - firstName
+                - lastName
+                - role
+                - email
+      responses:
+        201:
+          description: The admin was successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    description: The HTTP status code
+                  data:
+                    $ref: '#/components/schemas/Admin'
+        400:
+          description: The admin with this email already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    description: The HTTP status code
+                  message:
+                    type: string
+                    description: The admin with this email already exists
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    description: The HTTP status code
+                  message:
+                    type: string
+                    description: Internal server error
