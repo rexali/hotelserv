@@ -23,7 +23,7 @@
                 - lastName
                 - role
                 - email
-      responses:
+     responses:
         201:
           description: The admin was successfully created
           content:

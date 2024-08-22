@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Websocket</title>
+</head>
+
+<body>
+    <h1>Websocket</h1>
+    <label>Message: <input id="message" name="message" /></label>
+    <label>To: <input id="to" name="to" /></label>
+    <button onclick="sendHello()">Send Hello</button>
+    <script>
+        // headers:{
+        // "Upgrade":"websocket",
+        // "Connection":"Upgrade",
+        // "Sec-WebSocket-Key":"x3JJHMbDL1EzLkh9GBhXDw==",
+        // "Sec-WebSocket-Version":13
+        //}
+        if (!window.WebSocket) {
+            console.log("It does not suppoert websocket")
+        }
+        const clientId = window.location.href?.split("?")[1]?.split("=")[1]
+        let ws = new WebSocket("http://localhost:3030/websocket?clientId=" + clientId);
+
+        ws.onopen = () => {
+            ws.send(JSON.stringify({
+                clientId: "",
+                email: "",
+            }));  
+        }
+
+        ws.onmessage = (event) => {
+            document.getElementById("demo").innerHTML = event.data;
+        }
+
+        function sendHello() {
+            const message = document.getElementById("message")?.value ?? "";
+            const to = document.getElementById("to")?.value ?? "";
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ clientId: to, email: message }));
+                ws.onerror = (error) => {
+                    console.log(error)
+                }
+            } else {
+                console.log("WebSocket is already in closing or closed state")
+            }
+        }
+
+    </script>
+</body>
+
+</html>

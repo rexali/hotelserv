@@ -1,0 +1,36 @@
+.facebook{
+    background-color: blue;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    text-decoration: none;
+    margin: 10px;
+    
+}
+.linkedin{
+    background-color:lightskyblue;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    text-decoration: none;
+    margin: 10px;
+    
+}
+.google{
+    background-color:wheat;
+    color: brown;
+    padding: 10px;
+    border-radius: 10px;
+    text-decoration: none;
+    margin: 10px;
+    
+}
+.twitter{
+    background-color: blue;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    text-decoration: none;
+    margin: 10px;
+    
+}
