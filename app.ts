@@ -44,6 +44,7 @@ import favoriteRouter from "./favourites/routes/favorite.routes";
 import promotionRouter from "./promotions/routes/promotion.routes";
 import homeRouter from "./homes/routes/home.routes";
 import transactionRouter from "./transactions/routes/tranaction.routes";
+import reviewRouter from "./reviews/routes/review.routes";
 dotenv.config();
 
 // instance
@@ -137,9 +138,11 @@ app.use("/favorites", favoriteRouter);
 // promotion route
 app.use("/promotions", promotionRouter);
 // homes route
-app.use("homes", homeRouter)
+app.use("homes", homeRouter);
 // transaction route
-app.use("/transactions", transactionRouter)
+app.use("/transactions", transactionRouter);
+// Review route
+app.use("/reviews", reviewRouter);
 // csrf protection
 app.get("/csrf", createCsrfProtection);
 // server home route 
