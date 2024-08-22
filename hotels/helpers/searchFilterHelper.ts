@@ -1,4 +1,3 @@
-import { RoomType } from "../../rooms/types/types";
 import { HotelRoomsBookings, Terms } from "../types/types";
 
 export function searchFilterHelper(terms:Terms,hotels:Array<HotelRoomsBookings> ) {

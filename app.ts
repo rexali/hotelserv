@@ -41,8 +41,9 @@ import notificationRouter from "./notifications/routes/notification.routes";
 import messageRouter from "./messages/routes/message.routes";
 import cartRouter from "./carts/routes/cart.routes";
 import favoriteRouter from "./favourites/routes/favorite.routes";
-import homeRouter from "./homes/home.routes";
 import promotionRouter from "./promotions/routes/promotion.routes";
+import homeRouter from "./homes/routes/home.routes";
+import transactionRouter from "./transactions/routes/tranaction.routes";
 dotenv.config();
 
 // instance
@@ -116,27 +117,29 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 // authentication route
 app.use("/auth", authRouter);
 // profile route
-app.use("/profiles",profileRouter);
+app.use("/profiles", profileRouter);
 // hotel route
-app.use("/hotels",hotelRouter)
+app.use("/hotels", hotelRouter)
 // room route
 app.use("/rooms", roomRouter);
 // booking route
 app.use("/bookings", bookingRouter);
 // guest route
-app.use("/guests",guestRouter);
+app.use("/guests", guestRouter);
 // notification route
-app.use("/notifications",notificationRouter);
+app.use("/notifications", notificationRouter);
 // message route
 app.use("/messages", messageRouter);
 // cart route
 app.use("/carts", cartRouter);
 // favourite route
-app.use("/favorites",favoriteRouter);
+app.use("/favorites", favoriteRouter);
 // promotion route
-app.use("/promotions",promotionRouter);
+app.use("/promotions", promotionRouter);
 // homes route
 app.use("homes", homeRouter)
+// transaction route
+app.use("/transactions", transactionRouter)
 // csrf protection
 app.get("/csrf", createCsrfProtection);
 // server home route 
@@ -195,12 +198,12 @@ app.post("/webhook", (req: Request, res: Response, next: NextFunction) => {
     console.log(req.body)
 });
 
-app.post("/paystack_trx_url",getTransactionUrl);
-app.post("/paystack_webhook",getWebhookData);
+app.post("/paystack_trx_url", getTransactionUrl);
+app.post("/paystack_webhook", getWebhookData);
 app.post("/paystack_verify", verifyTransaction);
 
-app.post("/flw_trx_link",getPayLink);
-app.post("/flw_webhook",getWebhook);
+app.post("/flw_trx_link", getPayLink);
+app.post("/flw_webhook", getWebhook);
 app.post("/flw_verify", verifyPay);
 // Not found route
 app.use((req: Request, res: Response, next: NextFunction) => {

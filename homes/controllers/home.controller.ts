@@ -5,6 +5,7 @@ import Room from "../../rooms/models/room.model"
 import { HotelRoomsBookings, Terms } from "../../hotels/types/types"
 import { searchFilterHelper } from "../../hotels/helpers/searchFilterHelper"
 import Promotion from "../../promotions/models/promotion.model"
+import Transcation from "../../transactions/models/transaction.model"
 
 export class HomeService {
     constructor() { }
@@ -17,14 +18,14 @@ export class HomeService {
                 required: false,
                 include: [
                     {
-                        model: Booking, // replaced with Transaction model is ready
+                        model: Transcation,
                         required: true
                     }
                 ],
             },
-            group: ["Bookings.price"], // also this
-            order: [['Bookings.price', 'DESC']] // also this 
-        })
+            group: ["Transactions.RoomId"],
+            order: [['Transactions.amount', 'DESC']] 
+        });
     }
 
     // use cookie searched term preferences

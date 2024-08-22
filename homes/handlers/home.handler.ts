@@ -5,7 +5,7 @@ import { Terms } from "../../hotels/types/types";
 export async function homeHandler(req: Request, res: Response) {
     try {
         let popularHotelRoomsPromise = new Promise(async (resolve, _) => {
-            resolve(await HomeService.popularHotelRooms())
+            resolve((await HomeService.popularHotelRooms()).slice(0,4)) // firts four popular rooms
         });
         let recommendedHotelRoomsPromise = new Promise(async (resolve, _) => {
             const { terms } = req.cookies["rememberme"] as unknown as { terms: Terms }

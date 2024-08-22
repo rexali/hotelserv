@@ -3,7 +3,6 @@ import Room from "../models/room.model";
 import { RoomType } from "../types/types";
 import Hotel from "../../hotels/models/hotel.model";
 import { limit } from "../../constants/constants";
-import { Terms } from "../../hotels/types/types";
 
 export class RoomService {
 
