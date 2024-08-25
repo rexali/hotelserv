@@ -4,7 +4,7 @@ type TransactionType = {
     type: string, // credit, debit, transfer etc
     status: string,
     description: string,
-    categoryId: string
+    category: string  // wallet, room , food
 }
 
 export {
