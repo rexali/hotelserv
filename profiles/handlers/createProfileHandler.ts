@@ -1,6 +1,6 @@
 import { ProfileService } from "../controllers/profile.controller"
 import { NextFunction, Request, Response } from "express";
-import { Profile } from "../types/types";
+import { ProfileType } from "../types/types";
 import { uploadFile } from "../../utils/uploadFile";
 import multer from "multer";
 
@@ -20,7 +20,7 @@ export async function createProfileHandler(req: Request, res: Response, next: Ne
         // Everything went fine, send the file name and other fields to database
         try {
             if (req.file?.filename) {
-                const { id, ...rest } = req.body as Profile;
+                const { id, ...rest } = req.body as ProfileType;
                 const profileService = new ProfileService(id as number, { ...rest, image: req.file.filename + ".jpg" });
                 const profile = profileService.createProfile();
                 if (profile !== null) {

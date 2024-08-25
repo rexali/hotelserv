@@ -3,6 +3,7 @@ import { sequelize } from "../../config/sequelize.config";
 import { User } from "../../auth/models/user.model";
 import Room from "../../rooms/models/room.model";
 import Hotel from "../../hotels/models/hotel.model";
+import Wallet from "../../wallets/models/wallet.model";
 
 class Transcation extends Model { }
 // define model
@@ -24,16 +25,15 @@ Transcation.init({
     description: {
         type: DataTypes.STRING
     },
-    categoryId: { // room, wallet, food, etc
-        type: DataTypes.INTEGER
+    category: { // room, wallet, food, etc
+        type: DataTypes.STRING
     }
 
 
 }, { sequelize, tableName: "Transactions" });
 
-Transcation.belongsTo(User);
 Transcation.belongsTo(Room);
-Transcation.belongsTo(Hotel);
+Transcation.belongsTo(Wallet);
 
 export default Transcation;
 

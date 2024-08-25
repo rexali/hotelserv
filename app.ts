@@ -26,6 +26,7 @@ import { createServer } from 'http';
 import { Server } from "socket.io";
 var webrtc = require('wrtc');
 
+
 import roomRouter from "./rooms/routes/routes";
 import hotelRouter from "./hotels/routes/hotel.routes";
 import profileRouter from "./profiles/routes/profile.routes";
@@ -45,8 +46,19 @@ import promotionRouter from "./promotions/routes/promotion.routes";
 import homeRouter from "./homes/routes/home.routes";
 import transactionRouter from "./transactions/routes/tranaction.routes";
 import reviewRouter from "./reviews/routes/review.routes";
+import {setReminderTask } from "./utils/setReminder";
+import { 
+    // automateJobTask, 
+    automateTask 
+} from "./utils/automateTask";
+import { sendNotification } from "./utils/sendNotification";
+import walletRouter from "./wallets/routes/wallet.routes";
 dotenv.config();
 
+setReminderTask('2024-08-23 18:37:39',()=>{
+console.log('I am working');
+});
+automateTask('* * * * * *',()=>{}); //.job.start()
 // instance
 var app = express();
 const httpServer = createServer(app)
@@ -143,7 +155,9 @@ app.use("homes", homeRouter);
 app.use("/transactions", transactionRouter);
 // Review route
 app.use("/reviews", reviewRouter);
-// csrf protection
+// wallet route
+app.use("/wallets",walletRouter)
+// csrf protection route
 app.get("/csrf", createCsrfProtection);
 // server home route 
 app.get("/", async (req: Request, res: Response, next: NextFunction) => {
@@ -154,16 +168,16 @@ app.get("/", async (req: Request, res: Response, next: NextFunction) => {
     // render home page
     res.render("index", {});
 });
-// Swagger json
+// Swagger json route
 app.use('/docs.json', (req: Request, res: Response, next: NextFunction) => {
     // set header
     res.setHeader('Content-Type', 'application/json');
     // send 
     res.send(swaggerSpec);
 });
-// Swagger API doc
+// Swagger API doc route
 app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
-// server-side event stream:
+// server-side event stream route:
 app.get('/events', async function (req: Request, res: Response, next: NextFunction) {
     res.setHeader('Content-Type', 'text/event-stream')
     res.setHeader('Cache-Control', 'no-cache')
@@ -179,7 +193,7 @@ app.get('/events', async function (req: Request, res: Response, next: NextFuncti
         clearInterval(timer)
     })
 });
-// server side event subscription endpoint: subscribe to a stream:
+// server side event subscription endpoint /route: subscribe to a stream:
 app.get(
     '/stream',
     (req: Request, res: Response, next: NextFunction) => { res.flush = () => { }; next() },
@@ -193,21 +207,22 @@ app.post('/stream', function (req: Request, res: Response, next: NextFunction) {
     sse.serialize([content]);
     // sse.updateInit([{...content}]);
 });
-
-// webhook endpoint to process data
+// webhook endpoint/route to process data
 app.post("/webhook", (req: Request, res: Response, next: NextFunction) => {
     // process event
     console.log("Event recieved");
     console.log(req.body)
 });
-
+// paystack route
 app.post("/paystack_trx_url", getTransactionUrl);
 app.post("/paystack_webhook", getWebhookData);
 app.post("/paystack_verify", verifyTransaction);
-
+// flutterwave route
 app.post("/flw_trx_link", getPayLink);
 app.post("/flw_webhook", getWebhook);
 app.post("/flw_verify", verifyPay);
+// notification route
+app.get("/notify", sendNotification);
 // Not found route
 app.use((req: Request, res: Response, next: NextFunction) => {
     // return failure message

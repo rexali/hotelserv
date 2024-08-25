@@ -1,11 +1,11 @@
 import { ProfileService } from "../controllers/profile.controller"
 import { NextFunction, Request, Response } from "express";
-import { Profile } from "../types/types";
+import { ProfileType } from "../types/types";
 
 
 export async function updateProfileHandler(req: Request, res: Response, next: NextFunction) {
     try {
-        const { id, ...rest } = req.body as Profile;
+        const { id, ...rest } = req.body as ProfileType;
         const profileService = new ProfileService(id as number, rest);
         const profile = await profileService.updateProfile();
         if (profile !== null) {
