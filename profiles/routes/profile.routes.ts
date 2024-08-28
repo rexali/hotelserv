@@ -1,9 +1,9 @@
 import express from "express";
 import { createProfileHandler } from "../handlers/createProfileHandler";
 import { getProfileHandler } from "../handlers/getProfileHandler";
-import { removeProfileHandler } from "../handlers/removeRoomHandler";
 import { updateProfileHandler } from "../handlers/updateProfileHandler";
 import { getProfilesHandler } from "../handlers/getProfilesHandler";
+import { removeProfileHandler } from "../handlers/removeProfileHandler";
 
 // router instance
 const profileRouter = express.Router();

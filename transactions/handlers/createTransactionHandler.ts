@@ -4,8 +4,8 @@ import { TransactionType } from "../types/types";
 
 export async function createTransactionHandler(req: Request, res: Response, next: NextFunction) {
     try {
-        const { id, ...rest } = req.body as TransactionType;
-        const transactionService = new TransactionService(id as number, rest);
+        const data = req.body as TransactionType;
+        const transactionService = new TransactionService(data.id,data);
         const transaction = await transactionService.createTransaction();
         if (transaction !== null) {
             res.status(200).json({ status: "success", data: { transaction }, message: "Transaction created" })

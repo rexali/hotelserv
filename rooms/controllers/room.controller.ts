@@ -79,7 +79,7 @@ export class RoomService {
                 offset,
                 where: {
                     type: {
-                        [Op.like]: `${term}%`,
+                        [Op.like]: `%${term}%`,
                     },
                 },
                 include: {

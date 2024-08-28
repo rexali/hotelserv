@@ -3,5 +3,6 @@ export type RoomType = {
     number: number,
     type: string,
     availabilty: boolean,
-    price: number
+    price: number,
+
 }

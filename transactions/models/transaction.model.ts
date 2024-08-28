@@ -1,13 +1,24 @@
-import { DataTypes, Model } from "sequelize";
+import { CreationOptional, DataTypes, ForeignKey, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
-import { User } from "../../auth/models/user.model";
 import Room from "../../rooms/models/room.model";
-import Hotel from "../../hotels/models/hotel.model";
 import Wallet from "../../wallets/models/wallet.model";
+import Loyalty from "../../loyalty/models/loyalty.model";
 
-class Transcation extends Model { }
+class Transaction extends Model<InferAttributes<Transaction>, InferCreationAttributes<Transaction>> {
+    declare id: number;
+    declare amount: number;
+    declare type: string; // credit, debit, transfer etc
+    declare status: string;
+    declare description: string;
+    declare category: string;  // wallet, room , food
+    declare LoyaltyId: ForeignKey<number>;
+    declare WalletId: ForeignKey<number>;
+    declare RoomId: ForeignKey<number>;
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt:  CreationOptional<Date>;
+}
 // define model
-Transcation.init({
+Transaction.init({
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -17,7 +28,7 @@ Transcation.init({
         type: DataTypes.BIGINT
     },
     type: {
-        type: DataTypes.INTEGER
+        type: DataTypes.STRING
     },
     status: { // pending, completed, failed
         type: DataTypes.STRING
@@ -27,13 +38,14 @@ Transcation.init({
     },
     category: { // room, wallet, food, etc
         type: DataTypes.STRING
-    }
-
-
+    },
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE
 }, { sequelize, tableName: "Transactions" });
 
-Transcation.belongsTo(Room);
-Transcation.belongsTo(Wallet);
+Transaction.belongsTo(Room);
+Transaction.belongsTo(Wallet);
+Transaction.hasOne(Loyalty);
 
-export default Transcation;
+export default Transaction;
 

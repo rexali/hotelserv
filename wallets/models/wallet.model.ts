@@ -11,19 +11,19 @@ Wallet.init({
         primaryKey: true,
         autoIncrement: true
     },
-
     type: {   // cryptocurency, fiat currency
         type: DataTypes.STRING
     },
-
     balance: {
         type: DataTypes.INTEGER
     }
 
 
-}, { sequelize, tableName: "Transactions" });
+}, { sequelize, tableName: "Wallets" });
 
 Wallet.belongsTo(User);
 
 export default Wallet;
+
+// const wal = Wallet.build({id:"",type:""});
 

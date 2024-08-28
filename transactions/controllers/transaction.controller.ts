@@ -1,3 +1,4 @@
+import { User } from "../../auth/models/user.model";
 import Transaction from "../models/transaction.model";
 import { TransactionType } from "../types/types";
 
@@ -53,8 +54,11 @@ export class TransactionService {
             return await Transaction.findAll({
                 limit: 10,
                 offset,
-                where: {
-                    UserId: userId
+                include:{
+                  model:User,
+                  where:{
+                    UserId:userId
+                  } 
                 }
             });
         } catch (error) {

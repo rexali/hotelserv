@@ -4,5 +4,6 @@ type BookingType ={
     startDate: Date,
     endDate: Date, 
     status: string,
+    RoomId:number,
 }
 export default BookingType;

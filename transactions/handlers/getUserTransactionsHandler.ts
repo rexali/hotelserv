@@ -1,6 +1,5 @@
 import { TransactionService } from "../controllers/transaction.controller"
 import { NextFunction, Request, Response } from "express";
-import { TransactionType } from "../types/types";
 
 export async function getUserTransactionsHandler(req: Request, res: Response, next: NextFunction) {
     try {
