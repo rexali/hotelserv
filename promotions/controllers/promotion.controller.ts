@@ -9,7 +9,7 @@ export class PromotionService {
     id: number;
     promotion: PromotionType
 
-    constructor(id: number, promotion: PromotionType) {
+    constructor(id: number,promotion: PromotionType) {
         this.id = id;
         this.promotion = promotion;
     }

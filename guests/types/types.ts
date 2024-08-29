@@ -1,8 +1,8 @@
 type GuestType = {
-    id?: number,
-    name: string,
-    email: string,
-    preferences: [string]
+    id: number,
+    preferences: string[],
+    RoomId:number,
+    BookingId:number
 }
 
 export {GuestType}

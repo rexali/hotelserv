@@ -1,25 +1,24 @@
-import { DataTypes, Model } from "sequelize";
+import { CreationOptional, DataTypes, ForeignKey, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
 import { User } from "../../auth/models/user.model";
+import Room from "../../rooms/models/room.model";
 
-class Favorite extends Model { }
+class Favorite extends Model<InferAttributes<Favorite>, InferCreationAttributes<Favorite>> {
+    declare id: CreationOptional<number>;
+    declare RoomId: ForeignKey<number>;
+    declare UserId: ForeignKey<number>;
+}
 // define model
 Favorite.init({
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
-    },
-    roomId: {
-        type: DataTypes.INTEGER
-    },
-    HotelId: {
-        type: DataTypes.INTEGER
-    },
-
+    }
 }, { sequelize, tableName: "Favorites" });
 
 Favorite.belongsTo(User);
+Favorite.belongsTo(Room);
 
 export default Favorite;
 

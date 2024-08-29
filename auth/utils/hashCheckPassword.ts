@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import { Strategy } from "passport-local";
 
 const SALT_FACTOR = 10;
 /**
@@ -6,12 +7,12 @@ const SALT_FACTOR = 10;
  * @param {string} userPassword
  * @returns a string of value
  */
-function hashPassword(userPassword: any) {
+function hashPassword(userPassword: string): string | undefined{
     try {
         let salt = bcrypt.genSaltSync(SALT_FACTOR);
         let hashedPassword = bcrypt.hashSync(userPassword, salt);
         return hashedPassword; // store return hashedPassword in DB  
-    } catch (error) {
+    } catch (error: any) {
         console.warn(error);
     }
 }

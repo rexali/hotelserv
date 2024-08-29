@@ -4,8 +4,8 @@ type LoyaltyType = {
     tier: string,
     TransactionId: number,
     UserId: number
-    createdAt: Date,
-    updatedAt: Date
+    createdAt?: Date,
+    updatedAt?: Date
 }
 
 export { LoyaltyType }

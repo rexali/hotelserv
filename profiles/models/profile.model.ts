@@ -10,7 +10,10 @@ Profile.init({
         primaryKey:true,
         autoIncrement:true
     },
-    name:{
+    firstName:{
+        type: DataTypes.STRING
+    },
+    lastName:{
         type: DataTypes.STRING
     },
     image:{
@@ -19,10 +22,13 @@ Profile.init({
     phone:{
         type: DataTypes.STRING 
     },
+    dateOfBirth:{
+        type: DataTypes.DATE 
+    },
     address:{
         type: DataTypes.STRING 
     },
-    localgovt:{
+    localGovt:{
         type: DataTypes.STRING 
     },
     state:{
@@ -36,5 +42,5 @@ Profile.init({
 
 Profile.belongsTo(User);
 
-export default Profile
+export default Profile;
 

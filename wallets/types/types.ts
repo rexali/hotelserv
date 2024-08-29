@@ -1,10 +1,10 @@
 type WalletType = {
     id?: number,
-    type: string,
+    currencyType: string,
+    balance: number,
     UserId: number,
-    balance: number
+    WalletId: number
 }
-
 export {
     WalletType
 }

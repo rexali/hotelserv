@@ -1,44 +1,57 @@
-import { DataTypes, Model } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
 import Room from "../../rooms/models/room.model";
 
-class Hotel extends Model{}
+class Hotel extends Model<InferAttributes<Hotel>, InferCreationAttributes<Hotel>> {
+    declare id: CreationOptional<number>;
+    declare name: string;
+    declare email: string;
+    declare phone: string;
+    declare address: string;
+    declare description: string;
+    declare localGovt: string;
+    declare state: string;
+    declare country: string;
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
+}
 // define model
 Hotel.init({
     id: {
         type: DataTypes.INTEGER,
-        primaryKey:true,
-        autoIncrement:true
+        primaryKey: true,
+        autoIncrement: true
     },
-    name:{
+    name: {
         type: DataTypes.STRING
     },
-    email:{
-        type: DataTypes.STRING 
+    email: {
+        type: DataTypes.STRING
     },
-    phone:{
-        type: DataTypes.STRING 
+    phone: {
+        type: DataTypes.STRING
     },
-    address:{
-        type: DataTypes.STRING 
+    address: {
+        type: DataTypes.STRING
     },
-    description:{
-        type: DataTypes.TEXT 
-    },  
-    localgovt:{
-        type: DataTypes.STRING 
+    description: {
+        type: DataTypes.TEXT
     },
-    state:{
-        type: DataTypes.STRING 
+    localGovt: {
+        type: DataTypes.STRING
     },
-    country:{
-        type: DataTypes.STRING 
-    }
+    state: {
+        type: DataTypes.STRING
+    },
+    country: {
+        type: DataTypes.STRING
+    },
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE
 
-}, {sequelize, tableName:"Hotels"});
+}, { sequelize, tableName: "Hotels" });
 
 Hotel.hasMany(Room);
-Room.belongsTo(Hotel);
 
 export default Hotel
 

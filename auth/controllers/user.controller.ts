@@ -8,6 +8,7 @@ import { escape } from "html-escaper";
 import { registrationMSQ } from "../utils/registerationMSQ";
 import { Mutex } from "async-mutex";
 import { sendMail } from "../../utils/sendMail";
+import { UserType } from "../types/types";
 
 const mutex = new Mutex();
 /**
@@ -41,18 +42,19 @@ export async function registerUser(req: Request, res: Response) {
                 role,
                 permission,
                 status,
-            } = req.body;
+            } = req.body as UserType;
             // let us sanitise user data now
-            const userData = {
+            const userData: UserType = {
                 username: escape(username),
                 password: escape(password),
                 role: escape(role),
-                permission: escape(permission),
+                permission: permission,
                 status: escape(status),
                 code: code,
             }
+
             const user = await User.create({
-                ...userData, password: hashPassword(userData.password), code
+                ...userData, password: hashPassword(userData.password) as string, code
             });
             if (user === null) {
 
@@ -134,10 +136,6 @@ export const authorizeUser = (req: Request, res: Response, next: NextFunction) =
             if (decoded.role === "Admin" && decoded.permission.includes("Write")) {
                 return true
             }
-            // if (permissions.admin.write && decoded.role === "Admin") {
-            //     return true
-            // }
-
             return false;
         }
     } catch (error) {
@@ -179,7 +177,7 @@ export async function requestPasswordChange(req: Request, res: Response) {
             //  html message
             const html: string = registrationMSQ(email, code);
             // check if user exist
-            const user = await User.findOne({ where: { username: userData.username } }) as any;
+            const user = await User.findOne({ where: { username: userData.username } }) as UserType;
             if (user === null) {
                 res.json({ status: "fail", data: null, message: "Email does not exist" });
             } else {

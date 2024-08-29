@@ -25,14 +25,13 @@ export class WalletService {
         try {
             let { amount, type } = await Transaction.findOne({
                 where: {
-                    UserId: this.data.UserId,
                     WalletId: this.data.id
                 }
             }) as unknown as TransactionType;
             let { balance } = await Wallet.findByPk(this.id) as unknown as WalletType;
-            if (this.data.type === 'credit' && type === "credit") {
+            if (this.data.currencyType === 'credit' && type === "credit") {
                 return await Wallet.update({ balance: balance + amount }, { where: { id: this.id } });
-            } else if (this.data.type === 'debit' && type === 'debit') {
+            } else if (this.data.currencyType === 'debit' && type === 'debit') {
                 return await Wallet.update({ balance: balance - amount }, { where: { id: this.id } });
             } else {
                 return;

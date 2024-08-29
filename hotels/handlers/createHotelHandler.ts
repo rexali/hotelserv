@@ -5,8 +5,8 @@ import { HotelType } from "../types/types";
 
 export function createHotelHandler(req: Request, res: Response, next: NextFunction) {
     try {
-        const { id, ...rest } = req.body as HotelType;
-        const hotelService = new HotelService(id as number, rest);
+        const data = req.body as HotelType;
+        const hotelService = new HotelService(data.id, data);
         const hotel = hotelService.createHotel();
         if (hotel !== null) {
             res.status(200).json({ status: "success", data: { hotel }, message: "Hotel created" })

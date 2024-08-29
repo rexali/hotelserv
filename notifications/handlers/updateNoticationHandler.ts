@@ -6,8 +6,8 @@ import { NotificationType } from "../types/types";
 
 export async function updateNotificationHandler(req: Request, res: Response, next: NextFunction) {
     try {
-        const { id, ...rest } = req.body as NotificationType;
-        const notificationService = new NotificationService(id as number, rest);
+        const data = req.body as NotificationType;
+        const notificationService = new NotificationService(data.id, data);
         const notification = await notificationService.updateNotification();
         if (notification !== null || undefined) {
             res.status(200).json({ status: "success", data: { notification }, message: "Notification created" })

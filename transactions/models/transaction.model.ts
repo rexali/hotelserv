@@ -2,7 +2,6 @@ import { CreationOptional, DataTypes, ForeignKey, InferAttributes, InferCreation
 import { sequelize } from "../../config/sequelize.config";
 import Room from "../../rooms/models/room.model";
 import Wallet from "../../wallets/models/wallet.model";
-import Loyalty from "../../loyalty/models/loyalty.model";
 
 class Transaction extends Model<InferAttributes<Transaction>, InferCreationAttributes<Transaction>> {
     declare id: number;
@@ -45,7 +44,6 @@ Transaction.init({
 
 Transaction.belongsTo(Room);
 Transaction.belongsTo(Wallet);
-Transaction.hasOne(Loyalty);
 
 export default Transaction;
 

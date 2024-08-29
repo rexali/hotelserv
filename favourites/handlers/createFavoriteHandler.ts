@@ -5,8 +5,8 @@ import { FavoriteType } from "../types/types";
 
 export async function createFavoriteHandler(req: Request, res: Response, next: NextFunction) {
     try {
-        const { id, ...rest } = req.body as FavoriteType;
-        const favouriteService = new FavoriteService(id as number, rest);
+        const data = req.body as FavoriteType;
+        const favouriteService = new FavoriteService(data.id, data);
         const favorite = await favouriteService.createFavorite();
         if (favorite !== null) {
             res.status(200).json({ status: "success", data: { favorite }, message: "Favourtite found" })

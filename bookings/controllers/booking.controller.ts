@@ -1,5 +1,4 @@
 import { limit } from "../../constants/constants";
-import Room from "../../rooms/models/room.model";
 import Booking from "../models/booking.model";
 import BookingType from "../types/types";
 

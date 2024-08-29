@@ -1,10 +1,21 @@
-import { DataTypes } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
 import { Federation } from "./federation.model";
 import Hotel from "../../hotels/models/hotel.model";
 import Guest from "../../guests/models/guest.model";
 
-export const User = sequelize.define(
+
+interface UserModel extends Model <InferAttributes<UserModel>,InferCreationAttributes<UserModel>> {
+
+    id:CreationOptional<number>;
+    username:string;
+    password:string;
+    permission:Array<string>;
+    status:string;
+    role:string;
+    code:string;
+}
+export const User = sequelize.define<UserModel>(
     "User",
     {
         id: {
@@ -12,8 +23,9 @@ export const User = sequelize.define(
             primaryKey: true,
             autoIncrement: true
         },
-        username: {
+        username: { // email
             type: DataTypes.STRING,
+            unique:true
         },
         password: {
             type: DataTypes.STRING

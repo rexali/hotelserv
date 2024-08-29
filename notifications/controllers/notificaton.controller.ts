@@ -1,10 +1,11 @@
 import { limit } from "../../constants/constants";
 import Notification from "../models/notification.model";
+import { NotificationType } from "../types/types";
 
 export class NotificationService {
     id: number;
-    notification: any
-    constructor(id: number, notification: any) {
+    notification: NotificationType
+    constructor(id: number, notification: NotificationType) {
         this.id = id;
         this.notification = notification
     }

@@ -1,8 +1,10 @@
 export type RoomType = {
-    id?: number
-    number: number,
-    type: string,
-    availabilty: boolean,
-    price: number,
-
+    id?: number;
+    roomNumber: number;
+    roomType: string;
+    availability: boolean;
+    price: number;
+    HotelId: number;
+    createdAt?: Date;
+    updatedAt?: Date;
 }

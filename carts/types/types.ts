@@ -1,6 +1,8 @@
 export interface CartType {
-    id?: number,
-    roomId: number
-    guestId: number,
-    UserId?: number
+    id: number;
+    RoomId: number;
+    subtotal:number;
+    quantity:number;
+    price:number;
+    UserId: number;
 }

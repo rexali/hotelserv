@@ -1,7 +1,15 @@
-import { DataTypes } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
 
-export const Federation = sequelize.define(
+
+interface FederationModel extends Model <InferAttributes<FederationModel>,InferCreationAttributes<FederationModel>> {
+
+    id:CreationOptional<number>,
+    provider:string,
+    subject:string
+}
+
+export const Federation = sequelize.define<FederationModel>(
     "Federation",
     {
         id: {

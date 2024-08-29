@@ -1,46 +1,43 @@
-import { DataTypes, Model } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
 
-class Notification extends Model{}
+class Notification extends Model<InferAttributes<Notification>, InferCreationAttributes<Notification>> {
+    declare id: CreationOptional<number>;
+    declare title: string;
+    declare message: string;
+    declare type: string;
+    declare recipient: string
+    declare status: string;
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
+}
 // define model
 Notification.init({
     id: {
-        type: DataTypes.INTEGER.UNSIGNED,
-        primaryKey:true,
-        autoIncrement:true
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
     },
-    title:{
+    title: {
         type: DataTypes.STRING
     },
-    message:{
+    message: {
         type: DataTypes.STRING
     },
-    status:{
+    status: {
         type: DataTypes.STRING
     },
-    type:{
-        type: DataTypes.STRING    
+    type: {
+        type: DataTypes.STRING
     },
-    triggers:{
-        type: DataTypes.ARRAY(DataTypes.STRING)    
+    recipient: {
+        type: DataTypes.ARRAY(DataTypes.STRING)
     },
-    channels:{
-        type: DataTypes.ARRAY(DataTypes.STRING)   
-    }
-    ,
-    recipients:{
-        type: DataTypes.ARRAY(DataTypes.STRING)    
-    },
-    timing:{
-        type: DataTypes.STRING    
-    }
-    ,
-    actions:{
-        type: DataTypes.ARRAY(DataTypes.STRING)    
-    }
-    
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE
 
-}, {sequelize, tableName:"Notifications"});
+
+}, { sequelize, tableName: "Notifications" });
 
 
 export default Notification

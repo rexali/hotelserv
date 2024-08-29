@@ -1,5 +1,5 @@
 export interface FavoriteType {
-    id?: number,
-    roomId: number
-    UserId?: number
+    id: number,
+    RoomId: number
+    UserId: number
 }

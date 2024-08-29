@@ -1,10 +1,24 @@
-import { DataTypes, Model } from "sequelize";
+import { CreationOptional, DataTypes, ForeignKey, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
 import { User } from "../../auth/models/user.model";
 import Room from "../../rooms/models/room.model";
 import Hotel from "../../hotels/models/hotel.model";
 
-class Promotion extends Model { }
+class Promotion extends Model<InferAttributes<Promotion>, InferCreationAttributes<Promotion>> {
+    declare id: CreationOptional<number>;
+    declare RoomId: ForeignKey<number>;
+    declare UserId: ForeignKey<number>;
+    declare name: string;
+    declare endDate: string;
+    declare startDate: string;
+    declare description: string;
+    declare minPurchase: string;
+    declare maxPurchase: string;
+    declare status: string;
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
+
+}
 // define model
 Promotion.init({
     id: {
@@ -32,13 +46,14 @@ Promotion.init({
     },
     status: { // active or inactive
         type: DataTypes.STRING
-    }
-    
+    },
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE
+
 }, { sequelize, tableName: "Promotions" });
 
 Promotion.belongsTo(User);
 Promotion.belongsTo(Room);
-Promotion.belongsTo(Hotel);
 
 export default Promotion;
 

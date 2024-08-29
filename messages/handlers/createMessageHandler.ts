@@ -6,8 +6,8 @@ import { sendMail } from "../../utils/sendMail";
 
 export async function createMessageHandler(req: Request, res: Response, next: NextFunction) {
     try {
-        const { id, ...rest } = req.body as MessageType;
-        const mesaageService = new MessageService(id as number, rest);
+        const data = req.body as MessageType;
+        const mesaageService = new MessageService(data.id, data);
         const message = await mesaageService.createMessage() as unknown as MessageType;
         if (message !== null || undefined) {
             if (await sendMail(

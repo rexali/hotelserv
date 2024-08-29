@@ -121,7 +121,7 @@ export class HotelService {
                 hotels.filter(hotel => hotel.name === terms.state);
             }
             if (terms.localgovt) {
-                hotels.filter(hotel => hotel.localgovt === terms.localgovt);
+                hotels.filter(hotel => hotel.localGovt === terms.localgovt);
             }
             if (terms.startDate) {
                 hotels.filter(hotel => hotel.Rooms.filter(room => room.Bookings.filter(booking => booking.startDate === terms.startDate)));

@@ -1,14 +1,15 @@
-import { CreationOptional, DataTypes, ForeignKey, InferAttributes, InferCreationAttributes, Model } from "sequelize";
+import { CreationOptional, DataTypes, ForeignKey, InferAttributes, InferCreationAttributes, Model} from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
 import { User } from "../../auth/models/user.model";
+import Transaction from "../../transactions/models/transaction.model";
 
 
 class Loyalty extends Model<InferAttributes<Loyalty>, InferCreationAttributes<Loyalty>> {
     declare id: CreationOptional<number>;
     declare points: number;
     declare tier: string;
-    declare createdAt: Date;
-    declare updatedAt: Date;
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
     declare UserId: ForeignKey<number>;
     declare TransactionId: ForeignKey<number>;
 }
@@ -33,6 +34,8 @@ Loyalty.init({
 
 // associate and configure UserId as foreign key
 Loyalty.belongsTo(User);
+Loyalty.belongsTo(Transaction);
+
 
 export default Loyalty;
 

@@ -1,17 +1,23 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, ForeignKey, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
 import Room from "../../rooms/models/room.model";
+import Guest from "../../guests/models/guest.model";
 
-class Booking extends Model { }
+class Booking extends Model<InferAttributes<Booking>, InferCreationAttributes<Booking>> { 
+    declare id:number;
+    declare startDate:Date;
+    declare endDate:Date;
+    declare status:string;
+    declare RoomId: ForeignKey<number>;
+    declare GuestId: ForeignKey<number>;
+
+}
 // define model
 Booking.init({
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
-    },
-    name: {
-        type: DataTypes.STRING
     },
     startDate: {
         type: DataTypes.DATE
@@ -21,11 +27,11 @@ Booking.init({
     },
     status: {
         type: DataTypes.STRING
-    },
-
+    }
 }, { sequelize, tableName: "Bookings" });
 
-Booking.belongsTo(Room)
+Booking.belongsTo(Room);
+Booking.belongsTo(Guest);
 
-export default Booking
+export default Booking;
 

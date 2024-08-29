@@ -56,7 +56,9 @@ export class RoomService {
             return await Room.findOne({
                 limit,
                 offset,
-                where: { availability: true }
+                where: {
+                     availability: true 
+                    }
             });
         } catch (error) {
             console.warn(error);
@@ -78,7 +80,7 @@ export class RoomService {
                 limit,
                 offset,
                 where: {
-                    type: {
+                    roomType: {
                         [Op.like]: `%${term}%`,
                     },
                 },

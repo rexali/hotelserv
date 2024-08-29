@@ -1,9 +1,10 @@
 type MessageType = {
-    id?: number,
+    id: number,
     title: string,
     message: string,
     recipient: string,
-    sender:string
+    sender:string,
+    UserId:number
 }
 
 export { MessageType }
