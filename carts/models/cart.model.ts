@@ -7,8 +7,8 @@ import {
     Model 
 } from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
-import { User } from "../../auth/models/user.model";
 import Room from "../../rooms/models/room.model";
+import User from "../../auth/models/user.model";
 
 class Cart extends Model<InferAttributes<Cart>, InferCreationAttributes<Cart>> {
     declare id: CreationOptional<number>;

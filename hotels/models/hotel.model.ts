@@ -1,6 +1,7 @@
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
+import { CreationOptional, DataTypes, ForeignKey, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
 import Room from "../../rooms/models/room.model";
+import User from "../../auth/models/user.model";
 
 class Hotel extends Model<InferAttributes<Hotel>, InferCreationAttributes<Hotel>> {
     declare id: CreationOptional<number>;
@@ -12,6 +13,7 @@ class Hotel extends Model<InferAttributes<Hotel>, InferCreationAttributes<Hotel>
     declare localGovt: string;
     declare state: string;
     declare country: string;
+    declare UserId: ForeignKey<number>;
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;
 }
@@ -52,6 +54,8 @@ Hotel.init({
 }, { sequelize, tableName: "Hotels" });
 
 Hotel.hasMany(Room);
+Room.belongsTo(Hotel);
+
 
 export default Hotel
 

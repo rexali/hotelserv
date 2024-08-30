@@ -1,16 +1,14 @@
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
+import User from "./user.model";
 
+class Federation extends Model <InferAttributes<Federation>,InferCreationAttributes<Federation>> {
 
-interface FederationModel extends Model <InferAttributes<FederationModel>,InferCreationAttributes<FederationModel>> {
-
-    id:CreationOptional<number>,
-    provider:string,
-    subject:string
+    declare id:CreationOptional<number>;
+    declare provider:string;
+    declare subject:string;
 }
-
-export const Federation = sequelize.define<FederationModel>(
-    "Federation",
+Federation.init(
     {
         id: {
             type: DataTypes.INTEGER,
@@ -25,6 +23,9 @@ export const Federation = sequelize.define<FederationModel>(
         }
     },
     {
+        sequelize,
         tableName: "Federations"
     }
 )
+
+export default Federation;

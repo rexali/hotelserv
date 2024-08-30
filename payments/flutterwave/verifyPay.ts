@@ -5,7 +5,7 @@ import Booking from "../../bookings/models/booking.model";
 export const verifyPay = async (req: Request, res: Response) => {
     // const Flutterwave = await import("flutterwave-node-v3");
     if (req.query.status === 'successful') {
-        const transactionDetails = await Booking.findOne({ where: { ref: req.query.tx_ref } }) as any;
+        const transactionDetails = await Booking.findOne({ where: {ref: req.query.tx_ref as string } }) as any;
         const flw = new Flutterwave(process.env.FLW_PUBLIC_KEY, process.env.FLW_SECRET_KEY);
         const response = await flw.Transaction.verify({ id: req.query.transaction_id });
         if (

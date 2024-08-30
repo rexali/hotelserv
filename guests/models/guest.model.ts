@@ -6,8 +6,8 @@ import Booking from "../../bookings/models/booking.model";
 class Guest extends Model<InferAttributes<Guest>, InferCreationAttributes<Guest>> {
     declare id: CreationOptional<number>;
     declare preferences: string[];
-    declare createdAt: Date;
-    declare updatedAt: Date;
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
 }
 // define model
 Guest.init({
@@ -26,7 +26,9 @@ Guest.init({
 );
 
 Guest.hasMany(Room);
+
 Guest.hasMany(Booking);
+Booking.belongsTo(Guest);
 
 export default Guest
 

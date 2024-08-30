@@ -1,4 +1,4 @@
-import { User } from "../../auth/models/user.model";
+import User from "../../auth/models/user.model";
 import { limit } from "../../constants/constants";
 import Profile from "../../profiles/models/profile.model";
 import { ProfileType } from "../types/types";

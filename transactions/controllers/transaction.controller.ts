@@ -1,4 +1,4 @@
-import { User } from "../../auth/models/user.model";
+import User from "../../auth/models/user.model";
 import Transaction from "../models/transaction.model";
 import { TransactionType } from "../types/types";
 

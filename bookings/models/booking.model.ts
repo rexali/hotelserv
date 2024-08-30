@@ -8,6 +8,7 @@ class Booking extends Model<InferAttributes<Booking>, InferCreationAttributes<Bo
     declare startDate:Date;
     declare endDate:Date;
     declare status:string;
+    declare ref:string;
     declare RoomId: ForeignKey<number>;
     declare GuestId: ForeignKey<number>;
 
@@ -27,11 +28,14 @@ Booking.init({
     },
     status: {
         type: DataTypes.STRING
+    },
+    ref:{
+        type: DataTypes.STRING  
     }
 }, { sequelize, tableName: "Bookings" });
 
 Booking.belongsTo(Room);
-Booking.belongsTo(Guest);
+
 
 export default Booking;
 

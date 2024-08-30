@@ -1,6 +1,6 @@
 import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
-import { User } from "../../auth/models/user.model";
+import User from "../../auth/models/user.model";
 
 class Profile extends Model{}
 // define model

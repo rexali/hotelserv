@@ -8,16 +8,16 @@ import { RoomService } from "../../rooms/controllers/room.controller";
 
 export async function createBookingHandler(req: Request, res: Response, next: NextFunction) {
     try {
-        const { id, ...rest } = req.body as BookingType;
-        const bookingService = new BookingService(id as number, rest);
-        const room = await RoomService.getRoom(rest.RoomId) as unknown as RoomType;
+        const data = req.body as BookingType;
+        const bookingService = new BookingService(data.id, data);
+        const room = await RoomService.getRoom(data.RoomId) as unknown as RoomType;
         // check to see the room is not available
-        if (!room.availabilty) {
+        if (!room.availability) {
             const booking = await bookingService.createBooking() as unknown as BookingType;
             if (booking !== null) {
                 // update the room availaibility
-                const room = await Room.update({ availability: true }, { where: { RoomId: booking.RoomId } }) as unknown as RoomType;
-                if (room.availabilty) {
+                const room = await Room.update({ availability: true }, { where: { id: booking.RoomId } }) as unknown as RoomType;
+                if (room.availability) {
                     res.status(200).json({ status: "success", data: { booking }, message: "Booking created" })
                 }
             } else {

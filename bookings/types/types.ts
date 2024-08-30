@@ -6,5 +6,6 @@ type BookingType = {
     status: string,
     RoomId: number,
     GuestId:number,
+    ref:string;
 }
 export default BookingType;

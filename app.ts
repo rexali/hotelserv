@@ -17,7 +17,7 @@ import expressValidator from "express-validator";
 import compression from "compression";
 import rateLimit from "express-rate-limit";
 import { cacheReqRes, getCachedReqRes } from "./utils/cacheReqRes";
-import { User } from "./auth/models/user.model";
+// import { User } from "./auth/models/user.model";
 import { eventEmitter } from "./utils/webhook";
 var SSE = require('express-sse');
 import { establishWebsocketConnection } from "./utils/websocket";
@@ -53,6 +53,7 @@ import {
 } from "./utils/automateTask";
 import { sendNotification } from "./utils/sendNotification";
 import walletRouter from "./wallets/routes/wallet.routes";
+import User from "./auth/models/user.model";
 dotenv.config();
 
 setReminderTask('2024-08-23 18:37:39',()=>{

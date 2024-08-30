@@ -11,6 +11,7 @@ export type HotelType = {
     localGovt: string,
     state: string,
     country: string,
+    UserId:number
     createdAt?: Date,
     updatedAt?: Date
 }

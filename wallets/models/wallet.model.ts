@@ -1,6 +1,6 @@
 import { CreationOptional, DataTypes, ForeignKey, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
-import { User } from "../../auth/models/user.model";
+import User from "../../auth/models/user.model";
 
 
 class Wallet extends Model<InferAttributes<Wallet>, InferCreationAttributes<Wallet>> {
@@ -36,5 +36,4 @@ Wallet.belongsTo(User);
 
 export default Wallet;
 
-// const wal = Wallet.build({id:"",type:""});
 

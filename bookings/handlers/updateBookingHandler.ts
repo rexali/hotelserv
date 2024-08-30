@@ -5,8 +5,8 @@ import BookingType from "../types/types";
 
 export async function updateBookingHandler(req: Request, res: Response, next: NextFunction) {
     try {
-        const { id, ...rest } = req.body as BookingType;
-        const bookingService = new BookingService(id as number, rest);
+        const data = req.body as BookingType;
+        const bookingService = new BookingService(data.id, data);
         const booking = await bookingService.updateBooking();
         if (booking !== null) {
             res.status(200).json({ status: "success", data: { booking }, message: "Hotel updated" })

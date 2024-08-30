@@ -1,8 +1,7 @@
 import express, { NextFunction, Request, Response } from "express"
-import { registerUser, getUser, logOutUser } from "../controllers/user.controller";
+import { registerUser,logOutUser } from "../controllers/user.controller";
 import passport from "../../config/passport.config";
 import { verifyCsrfProtection } from "../../utils/csrfProtection";
-import { protectRoute } from "../utils/protectRoute";
 
 const authRouter = express.Router();
 
@@ -10,12 +9,6 @@ authRouter.post(
     "/register",
     verifyCsrfProtection,
     registerUser
-);
-
-authRouter.get(
-    "/user",
-    protectRoute,
-    getUser
 );
 
 authRouter.get(

@@ -1,8 +1,7 @@
 import { CreationOptional, DataTypes, ForeignKey, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
-import { User } from "../../auth/models/user.model";
 import Room from "../../rooms/models/room.model";
-import Hotel from "../../hotels/models/hotel.model";
+import User from "../../auth/models/user.model";
 
 class Promotion extends Model<InferAttributes<Promotion>, InferCreationAttributes<Promotion>> {
     declare id: CreationOptional<number>;

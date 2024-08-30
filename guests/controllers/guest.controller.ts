@@ -1,4 +1,4 @@
-import { User } from "../../auth/models/user.model";
+import User from "../../auth/models/user.model";
 import { limit } from "../../constants/constants";
 import Guest from "../models/guest.model";
 import { GuestType } from "../types/types";

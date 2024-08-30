@@ -1,6 +1,6 @@
 import { CreationOptional, DataTypes, ForeignKey, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
-import { User } from "../../auth/models/user.model";
+import User from "../../auth/models/user.model";
 
 class Message extends Model<InferAttributes<Message>, InferCreationAttributes<Message>> {
     declare id: CreationOptional<number>;

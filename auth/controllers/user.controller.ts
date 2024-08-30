@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { User } from "../models/user.model";
 import { checkPassword, hashPassword } from "../utils/hashCheckPassword";
 import { v4 as uuidV4 } from "uuid";
 import jwt from "jsonwebtoken";
@@ -9,6 +8,7 @@ import { registrationMSQ } from "../utils/registerationMSQ";
 import { Mutex } from "async-mutex";
 import { sendMail } from "../../utils/sendMail";
 import { UserType } from "../types/types";
+import User from "../models/user.model";
 
 const mutex = new Mutex();
 /**
@@ -56,23 +56,20 @@ export async function registerUser(req: Request, res: Response) {
             const user = await User.create({
                 ...userData, password: hashPassword(userData.password) as string, code
             });
-            if (user === null) {
-
+            if (user !== null) {
+                res.status(200).json({ status: 'success', data: {user}, messsage: 'Registeration successful' });
+            } else {
+                res.status(200).json({ status: 'success', data: null, messsage: 'Try again' });
             }
-            else {
-                res.status(200).json(user);
-            }
-
         }
     } catch (error) {
         console.log(error);
-        res.status(200).json(error);
+        res.status(200).json({ status: 'success', data: null, messsage: 'Error: '+error });
     } finally {
         // release path for others
         release()
     }
 }
-
 
 /**
  * Log in to verify user credentials
@@ -102,24 +99,38 @@ export function loginToVerifyUser(username: string, password: string, done: Func
             }
 
             User.findOne({ where: { username: userData.username } }).then((user: any) => {
-                if (!user) return done(null, false, { message: "Incorrect Username or password" });
-                if (!checkPassword(userData.password, user.password)) return done(null, false, { message: "Incorrect Username or password" });
-                const token = jwt.sign({ userId: user.id, role: user.role, permission: user.permission }, process.env["SECRET_KEY"] as string, { expiresIn: '1h' });
+                if (!user) {
+                    return done(null, false, { message: "Incorrect Username or password" });
+                }
+                if (!checkPassword(userData.password, user.password)) {
+                    return done(null, false, { message: "Incorrect Username or password" });
+                }
+                
+                const token = jwt.sign({ 
+                    userId: user.id, 
+                    role: user.role, 
+                    permission: user.permission 
+                }, process.env["SECRET_KEY"] as string, { expiresIn: '1h' });
+
                 const userPlusToken = { username, status: user.status, code: user.code, token }
+                
                 return done(null, userPlusToken);
             }).catch(err => {
-                if (err) return done(err);
+                if (err) {
+                    return done(err)
+                };
             })
         } catch (err) {
             console.log(err)
-            if (err) return done(err);
+            if (err) {
+                return done(err)
+            };
         }
     }
-
 }
 
 /**
- * Authorise user
+ * Authorise a user
  * @param req - client request 
  * @param res - server response
  * @param next - net funtion
@@ -133,7 +144,7 @@ export const authorizeUser = (req: Request, res: Response, next: NextFunction) =
             return false;
         } else {
             const decoded = jwt.verify(token, process.env['SECRET_KEY'] as string) as { userId: number, role: string, permission: [string] };
-            if (decoded.role === "Admin" && decoded.permission.includes("Write")) {
+            if (decoded.role === "admin" && decoded.permission.includes("write")) {
                 return true
             }
             return false;
@@ -155,7 +166,12 @@ export const logOutUser = (req: Request, res: Response) => {
     // res.redirect("/")
 }
 
-
+/**
+ * Request a user password change
+ * @param req - a request object
+ * @param res - a response object
+ * @returns void
+ */
 export async function requestPasswordChange(req: Request, res: Response) {
     try {
         const { email } = req.body;
@@ -195,17 +211,20 @@ export async function requestPasswordChange(req: Request, res: Response) {
             }
         }
 
-
     } catch (error) {
         console.warn(error);
         res.json({ status: "fail", data: null, message: "Error: " + Error });
     }
 }
 
-
+/**
+ * Change a user password
+ * @param req - a request object
+ * @param res - a response object
+ * @returns void
+ */
 export async function changePassword(req: Request, res: Response) {
     try {
-
         // let us validate user data
         const userDataSchema = Joi.object().keys({
             username: Joi.string().required,
@@ -250,16 +269,17 @@ export async function changePassword(req: Request, res: Response) {
         } else {
             res.json({ status: "fail", data: null, message: "Error: " + result.error.details });
         }
-
-
     } catch (error) {
         console.warn(error);
         res.json({ status: "fail", data: null, message: "Error: " + Error });
-
     }
-
 }
-
+/**
+ * Confirm a user registration
+ * @param req - a request object
+ * @param res - a response object
+ * @returns void
+ */
 export async function confirmRegisteration(req: Request, res: Response) {
     try {
         //  user data schema
@@ -296,15 +316,4 @@ export async function confirmRegisteration(req: Request, res: Response) {
         console.warn(error);
         res.json({ status: "fail", data: null, message: "Error: " + Error });
     }
-}
-
-/**
- * Get a user data
- * @param req - a request object
- * @param res - a response object
- * @returns void
- */
-export async function getUser(req: Request, res: Response) {
-    const user = await User.findAll();
-    res.status(200).json(user);
 }
