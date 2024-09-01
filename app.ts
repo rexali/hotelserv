@@ -25,6 +25,8 @@ import { establishWebRTCConnection } from "./utils/webrtc";
 import { createServer } from 'http';
 import { Server } from "socket.io";
 var webrtc = require('wrtc');
+import bodyParser  from "body-parser";
+
 
 
 import roomRouter from "./rooms/routes/routes";
@@ -73,6 +75,8 @@ const PORT = 3030;
 app.use(express.json());
 // Middleware to parse URL-encoded request bodies
 app.use(express.urlencoded({ extended: true }));
+// body parser for Apple
+app.use(bodyParser.urlencoded({ extended: true }));
 // use cors
 app.use(cors());
 // use parser

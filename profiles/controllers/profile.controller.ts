@@ -6,9 +6,9 @@ import { ProfileType } from "../types/types";
 export class ProfileService {
 
     private id: number;
-    private data?: ProfileType;
+    private data: ProfileType;
 
-    constructor(id: number, data?: ProfileType) {
+    constructor(id: number, data: ProfileType) {
         this.id = id;
         this.data = data
     }
@@ -47,7 +47,9 @@ export class ProfileService {
 
     async createProfile() {
         try {
-            return await Profile.create({ ...this.data });
+            return await Profile.create({
+               ...this.data
+            });
         } catch (error) {
             console.warn(error);
         }

@@ -1,44 +1,59 @@
-import { DataTypes, Model } from "sequelize";
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
 import User from "../../auth/models/user.model";
 
-class Profile extends Model{}
+class Profile extends Model<InferAttributes<Profile>, InferCreationAttributes<Profile>> {
+    declare id: CreationOptional<number>;
+    declare firstName: string;
+    declare lastName: string;
+    declare image: string;
+    declare phone: string;
+    declare dateOfBirth: Date;
+    declare address: string;
+    declare localGovt: string;
+    declare state: string;
+    declare country: string;
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
+}
 // define model
 Profile.init({
     id: {
         type: DataTypes.INTEGER,
-        primaryKey:true,
-        autoIncrement:true
+        primaryKey: true,
+        autoIncrement: true
     },
-    firstName:{
+    firstName: {
         type: DataTypes.STRING
     },
-    lastName:{
+    lastName: {
         type: DataTypes.STRING
     },
-    image:{
-        type: DataTypes.STRING 
+    image: {
+        type: DataTypes.STRING
     },
-    phone:{
-        type: DataTypes.STRING 
+    phone: {
+        type: DataTypes.STRING
     },
-    dateOfBirth:{
-        type: DataTypes.DATE 
+    dateOfBirth: {
+        type: DataTypes.DATE
     },
-    address:{
-        type: DataTypes.STRING 
+    address: {
+        type: DataTypes.STRING
     },
-    localGovt:{
-        type: DataTypes.STRING 
+    localGovt: {
+        type: DataTypes.STRING
     },
-    state:{
-        type: DataTypes.STRING 
+    state: {
+        type: DataTypes.STRING
     },
-    country:{
-        type: DataTypes.STRING 
-    }
+    country: {
+        type: DataTypes.STRING
+    },
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
 
-}, {sequelize, tableName:"Profiles"});
+}, { sequelize, tableName: "Profiles" });
 
 Profile.belongsTo(User);
 
