@@ -4,11 +4,9 @@ import { TransactionType } from "../types/types";
 
 export class TransactionService {
 
-    id: number;
     data: TransactionType;
 
-    constructor(id: number, data: TransactionType) {
-        this.id = id;
+    constructor(data: TransactionType) {
         this.data = data;
     };
 
@@ -22,7 +20,7 @@ export class TransactionService {
 
     async updateTransaction() {
         try {
-            return await Transaction.update({ ...this.data }, { where: { id: this.id } })
+            return await Transaction.update({ ...this.data }, { where: { id: this.data.id} })
         } catch (error) {
             console.warn(error);
         }

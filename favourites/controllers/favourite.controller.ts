@@ -1,14 +1,13 @@
 import { limit } from "../../constants/constants";
+import Hotel from "../../hotels/models/hotel.model";
 import Room from "../../rooms/models/room.model";
 import Favorite from "../models/favorite.model";
 import { FavoriteType } from "../types/types";
 
 export class FavoriteService {
-    id: number;
     favorite: FavoriteType
 
-    constructor(id: number, favorite: FavoriteType) {
-        this.id = id;
+    constructor(favorite: FavoriteType) {
         this.favorite = favorite;
     }
 
@@ -21,13 +20,16 @@ export class FavoriteService {
                 where: {
                     UserId: userId
                 },
-                include: {
+                include: [{
                     model: Room,
-                    where: {
-                        UserId: userId
-                    },
-                    required: false
-                }
+                    required: false,
+                    include: [
+                        {
+                            model: Hotel,
+                            required: false
+                        }
+                    ]
+                }]
             });
         } catch (error) {
             console.warn(error);

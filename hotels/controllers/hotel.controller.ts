@@ -3,6 +3,7 @@ import Room from "../../rooms/models/room.model";
 import Hotel from "../models/hotel.model";
 import { HotelRoomsBookings, HotelType, Terms } from "../types/types";
 import Booking from "../../bookings/models/booking.model";
+import User from "../../auth/models/user.model";
 
 export class HotelService {
 
@@ -43,7 +44,12 @@ export class HotelService {
             const offset = (page - 1) * 10;
             return await Hotel.findAll({
                 limit: 10,
-                offset
+                offset,
+                include: {
+                    model: User,
+                    attributes: ["id", "username"]
+                },
+
             });
         } catch (error) {
             console.warn(error);
@@ -52,7 +58,13 @@ export class HotelService {
 
     static async getHotel(id: number) {
         try {
-            return await Hotel.findOne({ where: { id: id } })
+            return await Hotel.findOne({
+                where: { id: id },
+                include: {
+                    model: User,
+                    attributes: ["id", "username"]
+                }
+            })
         } catch (error) {
             console.warn(error);
         }
@@ -65,20 +77,27 @@ export class HotelService {
                 limit: 10,
                 offset,
                 where: { id: id },
-                include: {
-                    model: Room,
-                }
+                include: [
+                    {
+                        model: User,
+                        attributes: ["id", "username"]
+                    },
+                    {
+                        model: Room,
+                    }
+                ],
+
             })
         } catch (error) {
             console.warn(error);
         }
     };
 
-    static async searchHotels(terms: Terms, page:number=1) {
+    static async searchHotels(terms: Terms, page: number = 1) {
         const offset = (page - 1) * 10;
         try {
             return await Hotel.findAll({
-                limit:10,
+                limit: 10,
                 offset,
                 where: {
                     name: {
@@ -100,7 +119,7 @@ export class HotelService {
             const offset = (page - 1) * 10;
             let hotels: Array<HotelRoomsBookings> = [];
             hotels = await Hotel.findAll({
-                limit:10,
+                limit: 10,
                 offset,
                 include: {
                     model: Room,
@@ -120,8 +139,8 @@ export class HotelService {
             if (terms.state) {
                 hotels.filter(hotel => hotel.name === terms.state);
             }
-            if (terms.localgovt) {
-                hotels.filter(hotel => hotel.localGovt === terms.localgovt);
+            if (terms.localGovt) {
+                hotels.filter(hotel => hotel.localGovt === terms.localGovt);
             }
             if (terms.startDate) {
                 hotels.filter(hotel => hotel.Rooms.filter(room => room.Bookings.filter(booking => booking.startDate === terms.startDate)));

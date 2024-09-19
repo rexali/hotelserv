@@ -1,9 +1,9 @@
 type LoyaltyType = {
-    id: number,
+    id?: number,
     points: number,
     tier: string,
     TransactionId: number,
-    UserId: number
+    UserId: number,
     createdAt?: Date,
     updatedAt?: Date
 }

@@ -4,8 +4,8 @@ import { WalletType } from "../types/types";
 
 export async function updateWalletHandler(req: Request, res: Response, next: NextFunction) {
     try {
-        const { id, ...rest } = req.body as WalletType;
-        const walletService = new WalletService(id as number, rest);
+        const data = req.body;
+        const walletService = new WalletService(data);
         const wallet = await walletService.updateWallet();
         if (wallet !== null) {
             res.status(200).json({ status: "success", data: { wallet }, message: "Wallet updated" })

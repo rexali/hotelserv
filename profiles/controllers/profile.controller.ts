@@ -37,6 +37,7 @@ export class ProfileService {
                 offset,
                 include: {
                     model: User,
+                    required:false
                 }
             });
         } catch (error) {

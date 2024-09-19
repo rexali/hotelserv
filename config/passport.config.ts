@@ -301,7 +301,7 @@ passport.use(new LinkedInStrategy.Strategy({
         });
 }));
 
-// Use Apple strategy
+// Use Apple strategy 
 passport.use(new AppleStrategy.Strategy({
     clientID: process.env.APPLE_SERVICE_ID as string,
     callbackURL: 'https://www.example.net/auth/apple/callback',

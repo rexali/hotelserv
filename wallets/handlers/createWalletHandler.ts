@@ -1,14 +1,13 @@
 import { WalletService } from "../controllers/wallet.controller"
 import { NextFunction, Request, Response } from "express";
-import { WalletType } from "../types/types";
 
 export async function createWalletHandler(req: Request, res: Response, next: NextFunction) {
     try {
-        const { id, ...rest } = req.body as WalletType;
-        const walletService = new WalletService(id as number, rest);
+        const data = req.body
+        const walletService = new WalletService(data);
         const wallet = await walletService.createWallet();
         if (wallet !== null) {
-            res.status(200).json({ status: "success", data: { wallet }, message: "Wallet created" })
+            res.status(200).json({ status: "success", data: { wallet }, message: "Wallet created" });
         } else {
             res.status(200).json({ status: "success", data: null, message: "No wallet created" })
         }

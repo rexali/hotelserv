@@ -5,7 +5,7 @@ import { TransactionType } from "../types/types";
 export async function updateTransactionHandler(req: Request, res: Response, next: NextFunction) {
     try {
         const data = req.body as TransactionType;
-        const transactionService = new TransactionService(data.id, data);
+        const transactionService = new TransactionService(data);
         const transaction = await transactionService.updateTransaction();
         if (transaction !== null) {
             res.status(200).json({ status: "success", data: { transaction }, message: "Transaction created" })

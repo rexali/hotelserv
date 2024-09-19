@@ -3,10 +3,11 @@ import { Mutex } from "async-mutex";
 import { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import { ProfileService } from "../../profiles/controllers/profile.controller";
+import { unpadToken } from "../utils/secureJWToken";
 dotenv.config();
 
 // create mutex instance
-const mutex = new Mutex();
+const mutex = new Mutex();  
 
 interface Decoded {
        userId: number,
@@ -20,7 +21,8 @@ export default async function verifyTokenHandler(req: Request, res: Response, ne
        const release = await mutex.acquire(); // lock the thread
        const token = req.body.token || req.cookies.token;
        try {
-              let decoded = jwt.verify(token, process.env.SECRET_KEY as string) as Decoded;
+              const unpaddedToken = unpadToken(token) as string;
+              let decoded = jwt.verify(unpaddedToken, process.env.SECRET_KEY as string) as Decoded;
               if (decoded.userId && decoded.role) {
                      const profile = await ProfileService.getProfile(decoded.userId);
                      const photo = profile?.image;

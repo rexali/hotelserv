@@ -6,7 +6,7 @@ import { GuestType } from "../types/types";
 export async function updateGuestHandler(req: Request, res: Response, next: NextFunction) {
     try {
         const data = req.body as GuestType;
-        const guestService = new GuestService(data.id, data);
+        const guestService = new GuestService(data);
         const guest = await guestService.updateGuest();
         if (guest !== null) {
             res.status(200).json({ status: "success", data: { guest }, message: "Guest updated" })

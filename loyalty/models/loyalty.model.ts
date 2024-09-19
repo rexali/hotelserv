@@ -1,7 +1,7 @@
 import { CreationOptional, DataTypes, ForeignKey, InferAttributes, InferCreationAttributes, Model} from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
-import { User } from "../../auth/models/user.model";
 import Transaction from "../../transactions/models/transaction.model";
+import User from "../../auth/models/user.model";
 
 
 class Loyalty extends Model<InferAttributes<Loyalty>, InferCreationAttributes<Loyalty>> {
@@ -30,7 +30,7 @@ Loyalty.init({
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE
 
-}, { sequelize, tableName: "loyalties" });
+}, { sequelize, tableName: "Loyalties" });
 
 // associate and configure UserId as foreign key
 Loyalty.belongsTo(User);

@@ -1,5 +1,6 @@
 export type RoomType = {
     id?: number;
+    photos: string[];
     roomNumber: number;
     roomType: string;
     availability: boolean;

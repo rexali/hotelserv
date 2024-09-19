@@ -7,7 +7,6 @@ import swaggerSpec from "./config/swagger.config";
 import session from "express-session";
 import passport from "./config/passport.config"
 import authRouter from "./auth/routes/user.routes";
-var db = require("./config/sequelize.config")
 var swaggerDocument: any = require("./config/swagger.json");
 import dotenv from "dotenv";
 import { errorHandler } from "./utils/errorHandler";
@@ -17,7 +16,6 @@ import expressValidator from "express-validator";
 import compression from "compression";
 import rateLimit from "express-rate-limit";
 import { cacheReqRes, getCachedReqRes } from "./utils/cacheReqRes";
-// import { User } from "./auth/models/user.model";
 import { eventEmitter } from "./utils/webhook";
 var SSE = require('express-sse');
 import { establishWebsocketConnection } from "./utils/websocket";
@@ -25,9 +23,7 @@ import { establishWebRTCConnection } from "./utils/webrtc";
 import { createServer } from 'http';
 import { Server } from "socket.io";
 var webrtc = require('wrtc');
-import bodyParser  from "body-parser";
-
-
+import bodyParser from "body-parser";
 
 import roomRouter from "./rooms/routes/routes";
 import hotelRouter from "./hotels/routes/hotel.routes";
@@ -48,20 +44,21 @@ import promotionRouter from "./promotions/routes/promotion.routes";
 import homeRouter from "./homes/routes/home.routes";
 import transactionRouter from "./transactions/routes/tranaction.routes";
 import reviewRouter from "./reviews/routes/review.routes";
-import {setReminderTask } from "./utils/setReminder";
-import { 
+import { setReminderTask } from "./utils/setReminder";
+import {
     // automateJobTask, 
-    automateTask 
+    automateTask
 } from "./utils/automateTask";
 import { sendNotification } from "./utils/sendNotification";
 import walletRouter from "./wallets/routes/wallet.routes";
-import User from "./auth/models/user.model";
+import { sequelize } from "./config/sequelize.config";
+import loyaltyRouter from "./loyalty/routes/loyalty.routes";
 dotenv.config();
 
-setReminderTask('2024-08-23 18:37:39',()=>{
-console.log('I am working');
+setReminderTask('2024-08-23 18:37:39', () => {
+    console.log('I am working');
 });
-automateTask('* * * * * *',()=>{}); //.job.start()
+automateTask('* * * * * *', () => { }); //.job.start()
 // instance
 var app = express();
 const httpServer = createServer(app)
@@ -110,13 +107,13 @@ app.set('view engine', 'ejs');
 app.set("views", "views");
 // test connection and synchronise to database
 ((() => {
-    db.sequelize.authenticate().then(() => {
+    sequelize.authenticate().then(() => {
         console.log("connected with database successfully");
     }).catch((error: any) => {
         console.error("Unable to connect with database: " + error);
     });
 
-    db.sequelize.sync({ force: true }).then(() => {
+    sequelize.sync({ force: false }).then(() => {
         console.log("database synced successfully");
     }).catch((error: any) => {
         console.error("Unable to sync with database: " + error);
@@ -161,9 +158,13 @@ app.use("/transactions", transactionRouter);
 // Review route
 app.use("/reviews", reviewRouter);
 // wallet route
-app.use("/wallets",walletRouter)
+app.use("/wallets", walletRouter);
+// wallet route
+app.use("/loyalties", loyaltyRouter);
+
 // csrf protection route
 app.get("/csrf", createCsrfProtection);
+
 // server home route 
 app.get("/", async (req: Request, res: Response, next: NextFunction) => {
     // trigger event
@@ -173,6 +174,7 @@ app.get("/", async (req: Request, res: Response, next: NextFunction) => {
     // render home page
     res.render("index", {});
 });
+
 // Swagger json route
 app.use('/docs.json', (req: Request, res: Response, next: NextFunction) => {
     // set header
@@ -180,6 +182,7 @@ app.use('/docs.json', (req: Request, res: Response, next: NextFunction) => {
     // send 
     res.send(swaggerSpec);
 });
+
 // Swagger API doc route
 app.use("/docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 // server-side event stream route:
@@ -187,47 +190,62 @@ app.get('/events', async function (req: Request, res: Response, next: NextFuncti
     res.setHeader('Content-Type', 'text/event-stream')
     res.setHeader('Cache-Control', 'no-cache')
     // send a ping approx every 2 seconds
-    const user = await User.findAll();
-    const data = JSON.stringify(user);
-    var timer = setInterval(function () {
-        res.write(JSON.stringify(`data:${data}\n\n`));
+    var timer = setInterval(async function () {
+        let user = {
+            name: "Aliyu"
+        }
+        let data = JSON.stringify(user);
+        // const date = new Date(Date.now());
+
+        // flush the data to the web
+        res.write(`data:${data}\n\n`);
+        // res.write(`data:${date}\n\n`);
+
         // !!! this is the important part
-        res.flush();
+        // flush the data to the web
+        res.flush = () => { };
     }, 2000)
     res.on('close', function () {
         clearInterval(timer)
     })
 });
-// server side event subscription endpoint /route: subscribe to a stream:
-app.get(
-    '/stream',
-    (req: Request, res: Response, next: NextFunction) => { res.flush = () => { }; next() },
+
+// subscription endpoint: subscribe to a stream 
+app.get('/stream', function (req: Request, res: Response, next: NextFunction) {
+    res.flush = () => { };
+    next();
+},
     sse.init
 );
-// sse publishing endpoints: publish to subscribers by posting to this endpoint
+
+// publishing endpoint: publish to subscribers by posting to this endpoint
 app.post('/stream', function (req: Request, res: Response, next: NextFunction) {
     const content = req.body;
     // update the database and read the update and publish to subscribers
-    // sse.send('content', "eventName"); // not working for now
     sse.serialize([content]);
     // sse.updateInit([{...content}]);
 });
+
 // webhook endpoint/route to process data
 app.post("/webhook", (req: Request, res: Response, next: NextFunction) => {
     // process event
     console.log("Event recieved");
     console.log(req.body)
 });
+
 // paystack route
 app.post("/paystack_trx_url", getTransactionUrl);
 app.post("/paystack_webhook", getWebhookData);
 app.post("/paystack_verify", verifyTransaction);
+
 // flutterwave route
 app.post("/flw_trx_link", getPayLink);
 app.post("/flw_webhook", getWebhook);
 app.post("/flw_verify", verifyPay);
+
 // notification route
 app.get("/notify", sendNotification);
+
 // Not found route
 app.use((req: Request, res: Response, next: NextFunction) => {
     // return failure message

@@ -1,17 +1,16 @@
-import { number } from "joi";
 import { limit } from "../../constants/constants";
 import Hotel from "../../hotels/models/hotel.model";
 import Room from "../../rooms/models/room.model";
 import Promotion from "../models/promotion.model";
 import { PromotionType } from "../types/types";
+import Transaction from "../../transactions/models/transaction.model";
+import { v4 as uuidv4 } from "uuid";
 
 export class PromotionService {
-    id: number;
-    promotion: PromotionType
+    data: PromotionType
 
-    constructor(id: number,promotion: PromotionType) {
-        this.id = id;
-        this.promotion = promotion;
+    constructor(data: PromotionType) {
+        this.data = data;
     }
 
     static async getPromotions(page: number = 1) {
@@ -34,7 +33,6 @@ export class PromotionService {
         } catch (error) {
             console.warn(error);
         }
-
     }
 
     static async getPromotion(id: number) {
@@ -57,7 +55,6 @@ export class PromotionService {
         } catch (error) {
             console.warn(error);
         }
-
     }
 
     static async getUserPromotions(userId: number, page: number = 1) {
@@ -88,7 +85,32 @@ export class PromotionService {
 
     async createPromotion() {
         try {
-            return await Promotion.create({ ...this.promotion });
+
+            let promotion = await Promotion.create({ ...this.data });
+            
+            if (promotion !== null) {
+
+                const transaction = await Transaction.create({
+                    amount: 49000,
+                    type: "credit",
+                    status: "pending",
+                    description: "deposit",
+                    category: "promotion",
+                    ref: uuidv4(),
+                    promotionId: promotion.id,
+                });
+
+                if (transaction !== null) {
+
+                    return promotion
+                } else {
+
+                    return null;
+                }
+            } else {
+
+                return null;
+            }
         } catch (error) {
             console.warn(error);
         }

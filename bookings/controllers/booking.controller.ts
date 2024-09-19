@@ -5,17 +5,19 @@ import BookingType from "../types/types";
 
 export class BookingService {
 
-    private id: number;
     private data: BookingType;
 
-    constructor(id: number, data: BookingType) {
-        this.id = id;
+    constructor(data: BookingType) {
         this.data = data;
     };
 
     async createBooking() {
         try {
-            return await Booking.create({ ...this.data, status: "pending" })
+            return await Booking.create({
+                ...this.data,
+                status: "completed",
+
+            })
         } catch (error) {
             console.warn(error);
         }
@@ -23,7 +25,7 @@ export class BookingService {
 
     async updateBooking() {
         try {
-            return await Booking.update({ ...this.data }, { where: { id: this.id } })
+            return await Booking.update({ ...this.data }, { where: { id: this.data.id } })
         } catch (error) {
             console.warn(error);
         }

@@ -4,8 +4,8 @@ import { PromotionType } from "../types/types";
 
 export async function createPromotionHandler(req: Request, res: Response, next: NextFunction) {
     try {
-        const data = req.body as PromotionType;
-        const promotionService = new PromotionService(data.id as number, data);
+        const data = req.body;
+        const promotionService = new PromotionService(data);
         const promotion = await promotionService.createPromotion();
         if (promotion !== null) {
             res.status(200).json({ status: "success", data: { promotion }, message: "Promotion created" })

@@ -21,10 +21,10 @@ export class RoomService {
             console.warn(error);
         }
     };
-
+ 
     async editRoom() {
         try {
-            return await Room.update({ ...this.data }, { where: { id: this.id || this.data.id } })
+            return await Room.update({ ...this.data }, { where: { id: this.id } })
         } catch (error) {
             console.warn(error);
         }

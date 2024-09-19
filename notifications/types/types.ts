@@ -1,5 +1,5 @@
 type NotificationType = {
-    id: number,
+    id?: number,
     title: string,
     message: string,
     type: string,

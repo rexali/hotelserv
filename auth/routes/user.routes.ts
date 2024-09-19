@@ -7,6 +7,7 @@ import forgetPasswordRequestHandler from "../handlers/forgetPasswordRequestHandl
 import changePasswordHandler from "../handlers/changePasswordHandler";
 import confirmRegisterationHandler from "../handlers/confirmationHandler";
 import verifyTokenHandler from "../handlers/verifyTokenHandler";
+import logInHandler from "../handlers/logInHandler";
 
 const authRouter = express.Router();
 
@@ -17,7 +18,7 @@ authRouter.post(
     registerUserHandler
 );
 
-// logout route
+// logout route 
 authRouter.get(
     "/logout",
     logOutUserHandler
@@ -51,25 +52,8 @@ authRouter.post(
 // local route
 authRouter.post(
     "/login/local",
-    function (req: Request, res: Response, next: NextFunction) {
-        passport.authenticate(
-            'local',
-            {
-                failureRedirect: '/login',
-                failureMessage: true
-            },
-            function (err: any, user: any, info: any, status: any) {
-                if (err) { return next(err) }
-                if (!user) {
-                    res.status(200).json({ status: "success", data: { result: false, user: null }, message: "Login failed" })
-                    // return res.redirect('/signin') 
-                }else{
-                    res.status(200).json({ status: "success", data: { result: true, user }, message: "Login successful" })
-                    // res.redirect('/dashboard');
-                }
-            })(req, res, next);
-    }
-);
+     logInHandler
+    );
 // facebook route
 authRouter.get(
     "/login/facebook",

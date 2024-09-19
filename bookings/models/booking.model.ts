@@ -1,16 +1,22 @@
-import { DataTypes, ForeignKey, InferAttributes, InferCreationAttributes, Model } from "sequelize";
+import {
+    CreationOptional,
+    DataTypes,
+    ForeignKey,
+    InferAttributes,
+    InferCreationAttributes,
+    Model
+} from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
-import Room from "../../rooms/models/room.model";
-import Guest from "../../guests/models/guest.model";
 
-class Booking extends Model<InferAttributes<Booking>, InferCreationAttributes<Booking>> { 
-    declare id:number;
-    declare startDate:Date;
-    declare endDate:Date;
-    declare status:string;
-    declare ref:string;
+class Booking extends Model<InferAttributes<Booking>, InferCreationAttributes<Booking>> {
+    declare id: CreationOptional<number>;
+    declare startDate: Date;
+    declare endDate: Date;
+    declare status: string;
     declare RoomId: ForeignKey<number>;
-    declare GuestId: ForeignKey<number>;
+    declare UserId: ForeignKey<number>;
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>
 
 }
 // define model
@@ -29,12 +35,10 @@ Booking.init({
     status: {
         type: DataTypes.STRING
     },
-    ref:{
-        type: DataTypes.STRING  
-    }
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE
 }, { sequelize, tableName: "Bookings" });
 
-Booking.belongsTo(Room);
 
 
 export default Booking;

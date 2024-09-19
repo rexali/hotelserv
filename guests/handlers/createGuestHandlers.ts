@@ -6,7 +6,7 @@ import { GuestType } from "../types/types";
 export async function createGuestHandler(req: Request, res: Response, next: NextFunction) {
     try {
         const data = req.body as GuestType;
-        const guestService = new GuestService(data.id, data);
+        const guestService = new GuestService(data);
         const guest = await guestService.createGuest();
         if (guest !== null) {
             res.status(200).json({ status: "success", data: { guest }, message: "Guest created" })

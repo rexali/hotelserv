@@ -6,11 +6,11 @@ export async function getFavoritesHandler(req: Request, res: Response, next: Nex
     try {
         const { userId } = req.params as unknown as { userId: number };
         const { page } = req.query as unknown as { page: number }
-        const cart = await FavoriteService.getFavorites(userId);
-        if (cart !== null) {
-            res.status(200).json({ status: "success", data: { cart }, message: "Cart found" })
+        const favorite = await FavoriteService.getFavorites(userId,page);
+        if (favorite !== null) {
+            res.status(200).json({ status: "success", data: { favorite }, message: "Favorites found" })
         } else {
-            res.status(200).json({ status: "success", data: null, message: "No cart found" })
+            res.status(200).json({ status: "success", data: null, message: "No favorites found" })
         }
     } catch (error) {
         res.status(500).json({ status: "failure", data: null, message: "Error: " + error })

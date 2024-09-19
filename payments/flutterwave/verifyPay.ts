@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 const Flutterwave = require('flutterwave-node-v3');
 import Booking from "../../bookings/models/booking.model";
+import Transaction from "../../transactions/models/transaction.model";
 
 export const verifyPay = async (req: Request, res: Response) => {
     // const Flutterwave = await import("flutterwave-node-v3");
     if (req.query.status === 'successful') {
-        const transactionDetails = await Booking.findOne({ where: {ref: req.query.tx_ref as string } }) as any;
+        const transactionDetails = await Transaction.findOne({ where: {ref: req.query.tx_ref as string } }) as any;
         const flw = new Flutterwave(process.env.FLW_PUBLIC_KEY, process.env.FLW_SECRET_KEY);
         const response = await flw.Transaction.verify({ id: req.query.transaction_id });
         if (

@@ -6,7 +6,7 @@ import { LoyaltyType } from "../types/types";
 export async function createLoyaltyHandler(req: Request, res: Response, next: NextFunction) {
     try {
         const data = req.body as LoyaltyType;
-        const loyaltyService = new LoyaltyService(data.id, data);
+        const loyaltyService = new LoyaltyService(data);
         const loyalty = await loyaltyService.createLoyalty();
         if (loyalty !== null) {
             res.status(200).json({ status: "success", data: { loyalty }, message: "Loyalty created"});

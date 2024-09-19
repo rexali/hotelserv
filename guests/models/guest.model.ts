@@ -1,11 +1,12 @@
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
+import { CreationOptional, DataTypes, ForeignKey, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
-import Room from "../../rooms/models/room.model";
 import Booking from "../../bookings/models/booking.model";
 
 class Guest extends Model<InferAttributes<Guest>, InferCreationAttributes<Guest>> {
     declare id: CreationOptional<number>;
     declare preferences: string[];
+    declare UserId:ForeignKey<number>;
+    declare RoomId:ForeignKey<number>;
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;
 }
@@ -24,8 +25,6 @@ Guest.init({
 },
     { sequelize, tableName: "Guests" }
 );
-
-Guest.hasMany(Room);
 
 Guest.hasMany(Booking);
 Booking.belongsTo(Guest);

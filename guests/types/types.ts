@@ -1,8 +1,8 @@
 type GuestType = {
-    id: number,
+    id?: number,
     preferences: string[],
     RoomId:number,
-    BookingId:number,
+    UserId:number,
     createdAt?:Date,
     updatedAt?:Date
 }

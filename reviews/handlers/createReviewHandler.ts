@@ -4,8 +4,8 @@ import { ReviewType } from "../types/types";
 
 export async function createReviewHandler(req: Request, res: Response, next: NextFunction) {
     try {
-        const { id, ...rest } = req.params as unknown as ReviewType;
-        const reviewService = new ReviewService(id as number, rest);
+        const data = req.body as ReviewType;
+        const reviewService = new ReviewService(data);
         const review = await reviewService.createReview();
         if (review !== null || undefined) {
             res.status(200).json({ status: "success", data: { review }, message: "Review created" })

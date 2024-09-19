@@ -5,11 +5,9 @@ import { LoyaltyType } from "../types/types";
 
 export class LoyaltyService {
 
-    private id: number;
     private data: LoyaltyType;
 
-    constructor(id: number, data: LoyaltyType) {
-        this.id = id;
+    constructor(data: LoyaltyType) {
         this.data = data;
     };
 
@@ -26,9 +24,9 @@ export class LoyaltyService {
             let { type } = await Transaction.findByPk(this.data.TransactionId) as unknown as TransactionType;
             let { points } = await Loyalty.findOne({ where: {TransactionId: this.data.TransactionId } }) as unknown as LoyaltyType;
             if (type === "credit") {
-                return await Loyalty.update({points: points + this.data.points }, { where: { id: this.id } });
+                return await Loyalty.update({points: points + this.data.points }, { where: { id: this.data.id} });
             } else if (type === 'debit') {
-                return await Loyalty.update({ points: points - this.data.points }, { where: { id: this.id } });
+                return await Loyalty.update({ points: points - this.data.points }, { where: { id: this.data.id } });
             } else {
                 return;
             }

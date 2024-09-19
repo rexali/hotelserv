@@ -50,6 +50,7 @@ User.init({
         sequelize,
         tableName: "Users"
     }
+    
 );
 
 User.hasMany(Federation);
@@ -58,6 +59,7 @@ Federation.belongsTo(User);
 User.hasMany(Hotel);
 
 User.hasOne(Guest);
+Guest.belongsTo(User);
 
 Hotel.belongsTo(User);
 

@@ -7,5 +7,8 @@ export type ProfileType = {
     address: string
     localgovt: string,
     state: string,
-    country: string
+    country: string,
+    UserId:number,
+    createdAt?: Date,
+    updatedAt?: Date
 }

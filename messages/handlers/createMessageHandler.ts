@@ -7,19 +7,20 @@ import { sendMail } from "../../utils/sendMail";
 export async function createMessageHandler(req: Request, res: Response, next: NextFunction) {
     try {
         const data = req.body as MessageType;
-        const mesaageService = new MessageService(data.id, data);
+        const mesaageService = new MessageService(data);
         const message = await mesaageService.createMessage() as unknown as MessageType;
         if (message !== null || undefined) {
-            if (await sendMail(
-                message.recipient,
-                message.title,
-                "text",
-                message.sender,
-                "",
-                message.message
-            )) {
-                res.status(200).json({ status: "success", data: { message }, message: "Message sent" })
-            }
+            // if (await sendMail(
+            //     message.recipient,
+            //     message.title,
+            //     "text",
+            //     message.sender,
+            //     "",
+            //     message.message
+            // )) {
+            //     res.status(200).json({ status: "success", data: { message }, message: "Message sent" })
+            // }
+            res.status(200).json({ status: "success", data: { message }, message: "Message sent" })
         } else {
             res.status(200).json({ status: "success", data: null, message: "No message sent" })
         }

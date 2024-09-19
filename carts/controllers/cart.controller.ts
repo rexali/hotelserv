@@ -4,10 +4,8 @@ import Cart from "../models/cart.model";
 import { CartType } from "../types/types";
 
 export class CartService {
-    id: number;
     cart: CartType
-    constructor(id: number, cart: CartType) {
-        this.id = id;
+    constructor(cart: CartType) {
         this.cart = cart
     }
 
@@ -22,9 +20,6 @@ export class CartService {
                 },
                 include: {
                     model: Room,
-                    where: {
-                        UserId: userId
-                    },
                     required: false
                 }
             });

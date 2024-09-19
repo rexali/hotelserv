@@ -7,7 +7,6 @@ class Wallet extends Model<InferAttributes<Wallet>, InferCreationAttributes<Wall
     declare id: CreationOptional<number>;
     declare currencyType: string;
     declare balance: number;
-    declare WalletId: ForeignKey<number>
     declare UserId: ForeignKey<number>;
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;

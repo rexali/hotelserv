@@ -5,11 +5,9 @@ import { GuestType } from "../types/types";
 
 export class GuestService {
 
-    private id: number;
     private data: GuestType;
 
-    constructor(id: number, data: GuestType) {
-        this.id = id;
+    constructor(data: GuestType) {
         this.data = data
     }
 
@@ -21,6 +19,7 @@ export class GuestService {
                 },
                 include: {
                     model: User,
+                    attributes: ["id", "User.username"]
                 }
             });
         } catch (error) {
@@ -29,7 +28,7 @@ export class GuestService {
 
     }
 
-    static async getGuests(page: number) {
+    static async getGuests(page: number = 1) {
         try {
             const offset = (page - 1) * limit;
             return await Guest.findAll({
@@ -37,6 +36,7 @@ export class GuestService {
                 offset,
                 include: {
                     model: User,
+                    attributes: ["id", "username"]
                 }
             });
         } catch (error) {
@@ -55,7 +55,7 @@ export class GuestService {
 
     async updateGuest() {
         try {
-            return await Guest.update({ ...this.data }, { where: { id: this.id } });
+            return await Guest.update({ ...this.data }, { where: { id: this.data.id } });
         } catch (error) {
             console.warn(error);
         }

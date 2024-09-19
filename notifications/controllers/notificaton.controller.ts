@@ -3,11 +3,10 @@ import Notification from "../models/notification.model";
 import { NotificationType } from "../types/types";
 
 export class NotificationService {
-    id: number;
-    notification: NotificationType
-    constructor(id: number, notification: NotificationType) {
-        this.id = id;
-        this.notification = notification
+
+    data: NotificationType
+    constructor(data: NotificationType) {
+        this.data = data;
     }
 
     static async getNotification(id: number) {
@@ -20,12 +19,11 @@ export class NotificationService {
         } catch (error) {
             console.warn(error);
         }
-
     }
 
     static async getNotifications(page: number = 1) {
         try {
-            const offset = (page-1)*limit;
+            const offset = (page - 1) * limit;
             return await Notification.findAll({
                 limit,
                 offset
@@ -38,7 +36,7 @@ export class NotificationService {
 
     async createNotification() {
         try {
-            return await Notification.create({ ...this.notification });
+            return await Notification.create({ ...this.data });
         } catch (error) {
             console.warn(error);
         }
@@ -46,7 +44,7 @@ export class NotificationService {
 
     async updateNotification() {
         try {
-            return await Notification.update({ ...this.notification }, { where: { id: this.id } });
+            return await Notification.update({ ...this.data }, { where: { id: this.data.id } });
         } catch (error) {
             console.warn(error);
         }

@@ -1,11 +1,11 @@
 type BookingType = {
-    id: number,
-    name: string,
+    id?: number,
     startDate: Date,
     endDate: Date,
     status: string,
     RoomId: number,
-    GuestId:number,
-    ref:string;
+    UserId:number,
+    createdAt?: Date,
+    updatedAt?: Date
 }
 export default BookingType;

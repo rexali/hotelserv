@@ -5,6 +5,7 @@ import { UserType } from "../types/types";
 import { hashPassword } from "../utils/hashCheckPassword";
 import { v4 as uuidV4 } from "uuid";
 import { Request, Response, NextFunction } from "express";
+import { escape } from "html-escaper";
 
 const mutex = new Mutex();
 /**
@@ -15,22 +16,24 @@ const mutex = new Mutex();
  */
 export default async function registerUserHandler(req: Request, res: Response) {
     // acquire path to perform operation to prevent race condition
+
     const release = await mutex.acquire();
     try {
         const code = uuidV4();
         // let us validate user data
         const userDataSchema = Joi.object().keys({
-            username: Joi.string().required,
-            password: Joi.string().required,
-            role: Joi.string().required,
+            username: Joi.string().required(),
+            password: Joi.string().required(),
+            role: Joi.string().required(),
             permission: Joi.array<string>(),
-            status: Joi.string().required,
+            status: Joi.string().required(),
+            token: Joi.string().required()
         });
 
         const validationResult = userDataSchema.validate(req.body);
 
         if (validationResult.error) {
-            res.status(200).json({ error: validationResult.error.details });
+            res.status(200).json({ status: "fail", data: null, error: "Validation failed: " + validationResult.error.message});
         } else {
             const {
                 username,
@@ -38,20 +41,22 @@ export default async function registerUserHandler(req: Request, res: Response) {
                 role,
                 permission,
                 status,
-            } = req.body as UserType;
+                token
+            } = req.body;
             // let us sanitise user data now
-            const userData: UserType = {
+            const userData = {
                 username: escape(username),
                 password: escape(password),
                 role: escape(role),
                 permission: permission,
                 status: escape(status),
                 code: code,
+                token: token
             }
 
             const authData = {
                 ...userData,
-                password: hashPassword(userData.password) as string, 
+                password: hashPassword(userData.password) as string,
                 code
             }
             const authService = new AuthService(authData)
@@ -64,7 +69,7 @@ export default async function registerUserHandler(req: Request, res: Response) {
         }
     } catch (error) {
         console.log(error);
-        res.status(200).json({ status: 'success', data: null, messsage: 'Error: ' + error });
+        res.status(500).json({ status: 'fail', data: null, messsage: 'Error: ' + error });
     } finally {
         // release path for others
         release()

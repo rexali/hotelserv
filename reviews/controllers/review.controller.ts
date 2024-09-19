@@ -3,11 +3,9 @@ import { ReviewType } from "../types/types";
 
 export class ReviewService {
 
-    id: number;
     data: ReviewType;
 
-    constructor(id: number, data: ReviewType) {
-        this.id = id;
+    constructor(data: ReviewType) {
         this.data = data;
     };
 
@@ -21,7 +19,7 @@ export class ReviewService {
 
     async updateReview() {
         try {
-            return await Review.update({ ...this.data }, { where: { id: this.id } })
+            return await Review.update({ ...this.data }, { where: { id: this.data.id } })
         } catch (error) {
             console.warn(error);
         }

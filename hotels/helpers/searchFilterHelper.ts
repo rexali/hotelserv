@@ -8,8 +8,8 @@ export function searchFilterHelper(terms:Terms,hotels:Array<HotelRoomsBookings> 
     if (terms.state) {
         hotels.filter(hotel => hotel.name === terms.state);
     }
-    if (terms.localgovt) {
-        hotels.filter(hotel => hotel.localGovt === terms.localgovt);
+    if (terms.localGovt) {
+        hotels.filter(hotel => hotel.localGovt === terms.localGovt);
     }
     if (terms.startDate) {
         hotels.filter(hotel => hotel.Rooms.filter(room => room.Bookings.filter(booking => booking.startDate === terms.startDate)));

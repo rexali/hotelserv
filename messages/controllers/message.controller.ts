@@ -2,11 +2,10 @@ import Message from "../models/message.model";
 import { MessageType } from "../types/types";
 
 export class MessageService {
-    id: number;
-    message: MessageType
-    constructor(id: number, message: MessageType) {
-        this.id = id;
-        this.message = message
+   
+    data: MessageType
+    constructor(data: MessageType) {
+        this.data = data
     }
 
     static async getMessage(id: number) {
@@ -38,7 +37,7 @@ export class MessageService {
 
     async createMessage() {
         try {
-            return await Message.create({ ...this.message });
+            return await Message.create({ ...this.data });
         } catch (error) {
             console.warn(error);
         }
@@ -46,7 +45,7 @@ export class MessageService {
 
     async updateMessage() {
         try {
-            return await Message.update({ ...this.message }, { where: { id: this.id } });
+            return await Message.update({ ...this.data }, { where: { id:this.data.id} });
         } catch (error) {
             console.warn(error);
         }

@@ -3,7 +3,8 @@ type WalletType = {
     currencyType: string,
     balance: number,
     UserId: number,
-    WalletId: number
+    createdAt?: Date,
+    updatedAt?: Date,
 }
 export {
     WalletType
