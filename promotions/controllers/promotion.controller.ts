@@ -5,6 +5,7 @@ import Promotion from "../models/promotion.model";
 import { PromotionType } from "../types/types";
 import Transaction from "../../transactions/models/transaction.model";
 import { v4 as uuidv4 } from "uuid";
+import { TransactionType } from "../../transactions/types/types";
 
 export class PromotionService {
     data: PromotionType
@@ -83,26 +84,14 @@ export class PromotionService {
 
     }
 
-    async createPromotion() {
+    static async createPromotion(data: PromotionType, transaction: TransactionType) {
         try {
-
-            let promotion = await Promotion.create({ ...this.data });
-            
+            let promotion = await Promotion.create({ ...data });
             if (promotion !== null) {
+                let result = await Transaction.create({ ...transaction }) as unknown as TransactionType;
+                if (result !== null) {
 
-                const transaction = await Transaction.create({
-                    amount: 49000,
-                    type: "credit",
-                    status: "pending",
-                    description: "deposit",
-                    category: "promotion",
-                    ref: uuidv4(),
-                    promotionId: promotion.id,
-                });
-
-                if (transaction !== null) {
-
-                    return promotion
+                    return promotion;
                 } else {
 
                     return null;
@@ -111,6 +100,7 @@ export class PromotionService {
 
                 return null;
             }
+
         } catch (error) {
             console.warn(error);
         }

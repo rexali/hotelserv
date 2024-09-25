@@ -20,10 +20,12 @@ Wallet.init({
         autoIncrement: true
     },
     currencyType: {   // cryptocurency, fiat currency
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        defaultValue:"NG"
     },
     balance: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        defaultValue:0
     },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE

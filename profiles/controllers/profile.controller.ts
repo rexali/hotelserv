@@ -21,6 +21,7 @@ export class ProfileService {
                 },
                 include: {
                     model: User,
+                    attributes:["id","username"]
                 }
             });
         } catch (error) {
@@ -37,6 +38,7 @@ export class ProfileService {
                 offset,
                 include: {
                     model: User,
+                    attributes:["id","username"],
                     required:false
                 }
             });

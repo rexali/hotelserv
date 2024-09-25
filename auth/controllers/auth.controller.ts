@@ -8,9 +8,11 @@ export class AuthService {
     }
 
     async createUser() {
-        return await User.create({
-            ...this.data
-        });
+        return await User.create(
+            {
+                ...this.data,
+            }
+        );
     }
 
     static async updateUserPassword(data: { password: string, username: string }) {
@@ -22,7 +24,7 @@ export class AuthService {
                 where: { username: data.username }
             });
     }
-    
+
     static async updateUserCode(data: { username: string, code: string }) {
         return await User.update(
             {
@@ -49,6 +51,16 @@ export class AuthService {
             })
         }
 
+    }
+
+    static async getAllUsers(page: number = 1) {
+        const limit = 10;
+        const offset = (page - 1) * limit;
+        return await User.findAll({
+            limit,
+            offset,
+            attributes:["id","username"]
+        });
     }
 
     static async removeUser(id: string) {

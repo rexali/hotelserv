@@ -6,11 +6,9 @@ import { limit } from "../../constants/constants";
 
 export class RoomService {
 
-    id: number;
     data: RoomType;
 
-    constructor(id: number, data: RoomType) {
-        this.id = id;
+    constructor(data: RoomType) {
         this.data = data;
     };
 
@@ -21,10 +19,10 @@ export class RoomService {
             console.warn(error);
         }
     };
- 
+
     async editRoom() {
         try {
-            return await Room.update({ ...this.data }, { where: { id: this.id } })
+            return await Room.update({ ...this.data }, { where: { id: this.data.id } })
         } catch (error) {
             console.warn(error);
         }
@@ -50,6 +48,26 @@ export class RoomService {
         }
     };
 
+    static async getVendorRooms(userId: number, page: number = 1) {
+        try {
+            const offset = (page - 1) * limit
+            return await Room.findAll({
+                limit,
+                offset,
+                include: {
+                    model: Hotel,
+                    required:false,
+                    where: {
+                        UserId: userId
+                    }
+                }
+
+            });
+        } catch (error) {
+            console.warn(error);
+        }
+    };
+
     static async getAvailableRooms(page: number = 1) {
         try {
             const offset = (page - 1) * limit
@@ -57,8 +75,8 @@ export class RoomService {
                 limit,
                 offset,
                 where: {
-                     availability: true 
-                    }
+                    availability: true
+                }
             });
         } catch (error) {
             console.warn(error);

@@ -12,7 +12,7 @@ class Booking extends Model<InferAttributes<Booking>, InferCreationAttributes<Bo
     declare id: CreationOptional<number>;
     declare startDate: Date;
     declare endDate: Date;
-    declare status: string;
+    declare status: string; 
     declare RoomId: ForeignKey<number>;
     declare UserId: ForeignKey<number>;
     declare createdAt: CreationOptional<Date>;

@@ -1,4 +1,4 @@
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
+import { CreationOptional, DataTypes, ForeignKey, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
 import User from "../../auth/models/user.model";
 
@@ -13,6 +13,7 @@ class Profile extends Model<InferAttributes<Profile>, InferCreationAttributes<Pr
     declare localGovt: string;
     declare state: string;
     declare country: string;
+    declare UserId: ForeignKey<number>;
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;
 }
@@ -52,7 +53,6 @@ Profile.init({
     },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
-
 }, { sequelize, tableName: "Profiles" });
 
 Profile.belongsTo(User);

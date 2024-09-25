@@ -2,7 +2,6 @@ import Transaction from "../../transactions/models/transaction.model";
 import { TransactionType } from "../../transactions/types/types";
 import Wallet from "../models/wallet.model";
 import { WalletType } from "../types/types";
-import { v4 as uuidv4 } from "uuid";
 
 
 export class WalletService {
@@ -14,47 +13,88 @@ export class WalletService {
 
     async createWallet() {
         try {
-
-            let wallet = await Wallet.create({ ...this.data });
-            if (wallet !== null) {
-                const transaction = await Transaction.create({
-                    amount: wallet.balance,
-                    type: "credit", // credit, debit, transfer etc
-                    status: "pending",
-                    description: "deposit",
-                    category: "wallet",  // wallet, room, promotion, food
-                    ref: uuidv4(),
-                    WalletId: wallet.id,
-                });
-                if (transaction !== null) {
-                    return wallet
-                } else {
-                    return null;
-                }
-            } else {
-                return null;
-            }
+            return await Wallet.create({
+                ...this.data,
+            });
 
         } catch (error) {
             console.warn(error);
         }
     };
 
-    // add or substract from wallet
-    async updateWallet() {
-        try {
-            let { amount, type } = await Transaction.findOne({
-                where: {
-                    WalletId: this.data.id
-                }
-            }) as unknown as TransactionType;
-            let { balance } = await Wallet.findByPk(this.data.id) as unknown as WalletType;
-            if (this.data.currencyType === 'NG' && type === "credit") {
-                return await Wallet.update({ balance: balance + amount }, { where: { id: this.data.id } });
-            } else if (this.data.currencyType === 'NG' && type === 'debit') {
-                return await Wallet.update({ balance: balance - amount }, { where: { id: this.data.id } });
+    static async creditWallet(walletId: number, transaction: TransactionType) {
+        let wallet = await Wallet.findByPk(walletId);
+        let result = await Wallet.update({ balance: wallet?.balance as number + transaction.amount }, { where: { id: walletId } });
+        if (result !== null) {
+
+            return await Transaction.create({ ...transaction }) as unknown as TransactionType;
+        } else {
+
+            return null;
+        }
+    }
+
+    static async debitWallet(walletId: number, transaction: TransactionType) {
+        let wallet = await Wallet.findByPk(walletId) as unknown as WalletType;
+        if (transaction.amount < wallet.balance) {
+            let result = await Wallet.update({ balance: wallet.balance - transaction.amount }, { where: { id: walletId } });
+            if (result !== null) {
+
+                return await Transaction.create({ ...transaction }) as unknown as TransactionType;
             } else {
-                return;
+
+                return null;
+            }
+        } else {
+
+            return { message: "Insufficient balance" }
+        }
+    }
+    // credit or debit a wallet
+    static async updateWallet(walletId: number, transaction: TransactionType) {
+        try {
+
+            let { balance } = await Wallet.findByPk(walletId) as unknown as WalletType;
+
+            if (transaction.type === "credit") {
+
+                let result = await Wallet.update({ balance: balance + transaction.amount }, { where: { id: walletId } });
+                if (result !== null) {
+                    let result2 =await Transaction.create({ ...transaction });
+                    if (result2!==null) {
+                        
+                        return result;
+                    } else{
+
+                        return null
+                    }
+                } else {
+
+                    return null;
+                }
+            } else if (transaction.type === 'debit') {
+                if (transaction.amount < balance) {
+                    let result = await Wallet.update({ balance: balance - transaction.amount }, { where: { id: walletId } });
+                    if (result !== null) {
+                        let result2 =await Transaction.create({ ...transaction });
+                        if (result2!==null) {
+
+                            return result
+                        } else{
+
+                            return null
+                        }
+                    } else {
+
+                        return null;
+                    }
+                } else {
+
+                    return { message: "Insufficient balance" }
+                }
+            } else {
+
+                return null;
             }
         } catch (error) {
             console.warn(error);

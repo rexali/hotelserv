@@ -34,7 +34,6 @@ export class FavoriteService {
         } catch (error) {
             console.warn(error);
         }
-
     }
 
     async createFavorite() {

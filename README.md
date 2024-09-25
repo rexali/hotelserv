@@ -161,7 +161,8 @@
 
 26. Create promotion
 
-    curl -d '{"RoomId":1,"UserId":1,"name": "Affordable Housing","endDate":"02-09-2024","startDate":"02-09-2024", "description":"Get one buy one","minPurchase":1,"maxPurchase":2,"status": "pending"}' -H "Content-Type:application/json" -X POST localhost:3030/promotions | json
+     curl -d '{"RoomId":1,"UserId":1,"name": "Affordable Housing","endDate":"02-09-2024","startDate":"02-09-2024", "description":"Get one buy one","minPurchase":1,"maxPurchase":2,"status": "pending", "amount": 2000,"type":"credit", "status": "pending","description": "promotion","category": "promotion","promotionId": 1}' -H "Content-Type:application/json" -X POST localhost:3030/promotions | json
+     <!-- It is with transaction data -->
 
 27. Get promotions
 
@@ -171,6 +172,7 @@
 
     curl -d '{"RoomId":1,"UserId":1,"title":"Not goood","content":"It is not that good","rating":4,"status":"approved"}' -H "Content-Type:application/json" -X POST localhost:3030/reviews | json
 
+         
 29. Get reviews
 
     curl -X GET localhost:3030/reviews | json
@@ -182,3 +184,9 @@
 31. Get a wallet
     
     curl -X GET localhost:3030/wallets | json
+
+32. update wallet (credit or debit)
+
+    curl -d '{"walletId":2, "amount":20, "type":"debit","description":"deposit"}' -H "Content-Type:application/json" -X PATCH localhost:3030/wallets/2 | json
+
+    curl -d '{"walletId":2, "amount":20, "type":"credit","description":"deposit"}' -H "Content-Type:application/json" -X PATCH localhost:3030/wallets/2 | json

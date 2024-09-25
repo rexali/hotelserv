@@ -25,7 +25,6 @@ export class GuestService {
         } catch (error) {
             console.warn(error);
         }
-
     }
 
     static async getGuests(page: number = 1) {
@@ -42,7 +41,22 @@ export class GuestService {
         } catch (error) {
             console.warn(error);
         }
+    }
 
+    static async getActiveGuests(page: number = 1) {
+        try {
+            const offset = (page - 1) * limit;
+            return await Guest.findAll({
+                limit,
+                offset,
+                include: {
+                    model: User,
+                    attributes: ["id", "username"]
+                }
+            });
+        } catch (error) {
+            console.warn(error);
+        }
     }
 
     async createGuest() {
