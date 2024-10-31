@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE</title>
+</head>
+
+<body>
+    <h1>Server-Side Event</h1>
+    <p id="demo"></p>
+    <script>
+        if (typeof (EventSource) !== "undefined") {
+            // Yes! Server-sent events support!
+            var enventSource = new EventSource('http://localhost:3030/stream');
+            enventSource.onmessage = function (event) {
+                document.getElementById("demo").innerHTML = event.data;
+            };
+
+            enventSource.onopen = () => {
+                console.log("Connected to SSE endpoint")
+            }
+
+            enventSource.onerror = (err) => {
+                console.log(err);
+            }
+            // enventSource.addEventListener('message', function (event) {
+            //     document.getElementById("demo").innerHTML += event.data;
+            // });
+        } else {
+            // Sorry! No server-sent events support..
+            document.getElementById("demo").innerHTML += "Sorry! No server-sent events support..";
+        }
+
+
+    </script>
+</body>
+
+</html>

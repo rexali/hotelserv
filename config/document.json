@@ -1,0 +1,16 @@
+{
+  "definitions": {
+    "myElement": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "required": true,
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

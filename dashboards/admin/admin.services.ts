@@ -123,10 +123,10 @@ export class AdminServices {
                 const dayOfMonth = new Date(user.day).getDate() as any;
                 usersByDayOfMonth[dayOfMonth] = user.numberOfUsers
             });
-             let result = usersByDayOfMonth;
+            let result = usersByDayOfMonth;
             return {
-                usersByDayOfMonth: Object.values(result), 
-                result 
+                usersByDayOfMonth: Object.values(result),
+                result
             }
 
         } catch (error) {
@@ -207,7 +207,7 @@ export class AdminServices {
             });
 
             let result = totalBookingsAmountByDayofTheWeek;
-           
+
             return {
                 totalBookingsAmountByDayOfTheWeek: Object.values(result),
                 result
@@ -218,8 +218,154 @@ export class AdminServices {
         }
     }
 
-    
+
     async getClientDashboardData(req: any, res: any, next: any) {
+
+        let allRegisteredUsersPromise = new Promise(async (resolve, _) => {
+
+            const users = await AuthService.getAllUsers(req.params.page);
+
+            resolve(users);
+        })
+
+        let numbersOfNewRegisteredUsersThisWeekPromise = new Promise(async (resolve, _) => {
+
+            try {
+                const today = new Date();
+                const lastWeek = today.setDate(today.getDate() - 7);
+                const users = await User.count({
+                    where: {
+                        createdAt: {
+                            [Op.gte]: new Date(lastWeek)
+                        }
+                    }
+                })
+
+                return users;
+
+            } catch (error) {
+
+                console.log(error)
+            }
+        });
+
+
+        let newRegisteredUsersPerDayOftheMonthPromise = new Promise(async (resolve, reject) => {
+
+            try {
+                const usersByDay = await User.findAll({
+                    attributes: [
+                        [sequelize.fn('DATE_TRUNC', 'day', sequelize.col('createdAt')), 'day'],
+                        [sequelize.fn('COUNT', sequelize.col('id')), 'numberOfUsers']
+                    ],
+                    where: {
+                        createdAt: {
+                            [Op.gte]: sequelize.literal('DATE_TRUNC(\'month\', CURRENT_DATE)'),
+                            [Op.lte]: sequelize.literal('DATE_TRUNC(\'month\', CURRENT_DATE) + INTERVAL \'1 month\'')
+                        }
+                    },
+                    group: ['day']
+                });
+
+                const usersByDayOfMonth = {} as any;
+
+                usersByDay.forEach((user: any) => {
+                    const dayOfMonth = new Date(user.day).getDate() as any;
+                    usersByDayOfMonth[dayOfMonth] = user.numberOfUsers
+                });
+                let result = usersByDayOfMonth;
+
+                resolve(Object.values(result));
+
+            } catch (error) {
+
+                console.log(error);
+
+            }
+        })
+
+
+        let totalTransactionsPromise = new Promise(async (resolve, _) => {
+            try {
+                const totalTransactions = await Transaction.sum('amount');
+
+                return totalTransactions
+            } catch (error) {
+                console.log(error);
+            }
+        });
+
+        let totalTransactionsThisWeekPromise = new Promise(async (resolve, _) => {
+            try {
+                const today = new Date();
+                const lastWeek = today.setDate(today.getDate() - 7);
+                const totalTransactions = await Transaction.sum('amount', {
+                    where: {
+                        createdAt: {
+                            [Op.gte]: new Date(lastWeek)
+                        }
+                    }
+                });
+
+                resolve(totalTransactions)
+            } catch (error) {
+                console.log(error);
+            }
+        })
+
+
+        let totalBookingsAmountPerDayOfTheWeekPromise = new Promise(async (resolve, _) => {
+
+            const today = new Date();
+            const lastWeek = today.setDate(today.getDate() - 7);
+
+            const totalBookingsAmountByDayofTheWeek: any = {
+                Monday: 0,
+                Tueday: 0,
+                Wednesday: 0,
+                Thursday: 0,
+                Friday: 0,
+                Saturday: 0,
+                Sunday: 0
+            }
+
+            try {
+                const bookingsByDay = await Booking.findAll({
+                    attributes: [
+                        "Bookings.id",
+                        [sequelize.fn("DATE_TRUNC", 'day', sequelize.col('Transactions.createdAt')), 'day'],
+                        [sequelize.fn("SUM", sequelize.col('Transactions.amount')), 'totalBookingsAmountThisWeek'],
+                    ],
+                    include: [
+                        {
+                            model: Transaction,
+                        }
+                    ],
+                    where: {
+                        createdAt: {
+                            [Op.gte]: new Date(lastWeek)
+                        }
+                    },
+                    group: ['Bookings.id', 'day']
+                });
+
+                bookingsByDay.forEach((booking: any) => {
+                    const dayOfWeek = new Date(booking.day).toLocaleString('en-US', { weekday: 'long' }) as any;
+                    totalBookingsAmountByDayofTheWeek[dayOfWeek] = booking.totalBookingsAmountThisWeek;
+                });
+
+                let result = totalBookingsAmountByDayofTheWeek;
+
+                resolve(Object.values(result))
+
+            } catch (error) {
+                console.log(error);
+            }
+
+
+        })
+
+
 
         let roomsPromise = new Promise(async (resove, reject) => {
             try {
@@ -360,7 +506,15 @@ export class AdminServices {
                 transactions,
                 guests,
                 messages,
-                notifications
+                notifications,
+
+                allRegisteredUsers,
+                numbersOfNewRegisteredUsersThisWeek,
+                newRegisteredUsersPerDayOftheMonth,
+                totalTransactions,
+                totalTransactionsThisWeek,
+                totalBookingsAmountPerDayOfTheWeek
+
             ] = await Promise.all([
                 roomsPromise,
                 availableRoomsPromise,
@@ -370,7 +524,16 @@ export class AdminServices {
                 transactionsPromise,
                 guestsPromise,
                 messagesPromise,
-                notificationsPromise
+                notificationsPromise,
+
+                allRegisteredUsersPromise,
+                numbersOfNewRegisteredUsersThisWeekPromise,
+                newRegisteredUsersPerDayOftheMonthPromise,
+                totalTransactionsPromise,
+                totalTransactionsThisWeekPromise,
+                totalBookingsAmountPerDayOfTheWeekPromise
+
+
             ]);
             return {
                 rooms,
@@ -381,7 +544,14 @@ export class AdminServices {
                 transactions,
                 guests,
                 messages,
-                notifications
+                notifications,
+
+                allRegisteredUsers,
+                numbersOfNewRegisteredUsersThisWeek,
+                newRegisteredUsersPerDayOftheMonth,
+                totalTransactions,
+                totalTransactionsThisWeek,
+                totalBookingsAmountPerDayOfTheWeek
             }
         } catch (error) {
             console.warn(error);

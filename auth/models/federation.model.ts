@@ -1,6 +1,5 @@
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import { sequelize } from "../../config/sequelize.config";
-import User from "./user.model";
 
 class Federation extends Model <InferAttributes<Federation>,InferCreationAttributes<Federation>> {
 
